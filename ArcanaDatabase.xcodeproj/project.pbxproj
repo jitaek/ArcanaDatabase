@@ -12,6 +12,10 @@
 		044AB01A1D8DFD6400B6678F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 044AB0181D8DFD6400B6678F /* Main.storyboard */; };
 		044AB01C1D8DFD6400B6678F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 044AB01B1D8DFD6400B6678F /* Assets.xcassets */; };
 		044AB01F1D8DFD6400B6678F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 044AB01D1D8DFD6400B6678F /* LaunchScreen.storyboard */; };
+		044AB0291D8DFDC600B6678F /* arcanaData.txt in Resources */ = {isa = PBXBuildFile; fileRef = 044AB0261D8DFDC600B6678F /* arcanaData.txt */; };
+		044AB02A1D8DFDC600B6678F /* ArcanaDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044AB0271D8DFDC600B6678F /* ArcanaDatabase.swift */; };
+		044AB02B1D8DFDC600B6678F /* GlobalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044AB0281D8DFDC600B6678F /* GlobalConstants.swift */; };
+		2D32BB44290516072E6B516B /* Pods_ArcanaDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E09681E1836C3DB035C4AE7 /* Pods_ArcanaDatabase.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +26,12 @@
 		044AB01B1D8DFD6400B6678F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		044AB01E1D8DFD6400B6678F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		044AB0201D8DFD6400B6678F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		044AB0261D8DFDC600B6678F /* arcanaData.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = arcanaData.txt; sourceTree = "<group>"; };
+		044AB0271D8DFDC600B6678F /* ArcanaDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArcanaDatabase.swift; sourceTree = "<group>"; };
+		044AB0281D8DFDC600B6678F /* GlobalConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalConstants.swift; sourceTree = "<group>"; };
+		0EB4105AF6E80ACF6446C865 /* Pods-ArcanaDatabase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArcanaDatabase.release.xcconfig"; path = "Pods/Target Support Files/Pods-ArcanaDatabase/Pods-ArcanaDatabase.release.xcconfig"; sourceTree = "<group>"; };
+		1E09681E1836C3DB035C4AE7 /* Pods_ArcanaDatabase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ArcanaDatabase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		30413E90C0939B58766D250D /* Pods-ArcanaDatabase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArcanaDatabase.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ArcanaDatabase/Pods-ArcanaDatabase.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D32BB44290516072E6B516B /* Pods_ArcanaDatabase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +51,8 @@
 			children = (
 				044AB0131D8DFD6400B6678F /* ArcanaDatabase */,
 				044AB0121D8DFD6400B6678F /* Products */,
+				EC436BF1CF039D08A2C55BAA /* Pods */,
+				1DF3A7A05AE6CCDF0C1B903D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,6 +67,9 @@
 		044AB0131D8DFD6400B6678F /* ArcanaDatabase */ = {
 			isa = PBXGroup;
 			children = (
+				044AB0261D8DFDC600B6678F /* arcanaData.txt */,
+				044AB0271D8DFDC600B6678F /* ArcanaDatabase.swift */,
+				044AB0281D8DFDC600B6678F /* GlobalConstants.swift */,
 				044AB0141D8DFD6400B6678F /* AppDelegate.swift */,
 				044AB0161D8DFD6400B6678F /* ViewController.swift */,
 				044AB0181D8DFD6400B6678F /* Main.storyboard */,
@@ -64,6 +80,23 @@
 			path = ArcanaDatabase;
 			sourceTree = "<group>";
 		};
+		1DF3A7A05AE6CCDF0C1B903D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1E09681E1836C3DB035C4AE7 /* Pods_ArcanaDatabase.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EC436BF1CF039D08A2C55BAA /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				30413E90C0939B58766D250D /* Pods-ArcanaDatabase.debug.xcconfig */,
+				0EB4105AF6E80ACF6446C865 /* Pods-ArcanaDatabase.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -71,9 +104,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 044AB0231D8DFD6400B6678F /* Build configuration list for PBXNativeTarget "ArcanaDatabase" */;
 			buildPhases = (
+				D0F16CA0C27197ED348F33E2 /* [CP] Check Pods Manifest.lock */,
 				044AB00D1D8DFD6400B6678F /* Sources */,
 				044AB00E1D8DFD6400B6678F /* Frameworks */,
 				044AB00F1D8DFD6400B6678F /* Resources */,
+				56881639EA85CA203E0AB7C5 /* [CP] Embed Pods Frameworks */,
+				76EFC1F4B458DE2C71D77755 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -96,6 +132,7 @@
 				TargetAttributes = {
 					044AB0101D8DFD6400B6678F = {
 						CreatedOnToolsVersion = 8.0;
+						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -123,6 +160,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				044AB0291D8DFDC600B6678F /* arcanaData.txt in Resources */,
 				044AB01F1D8DFD6400B6678F /* LaunchScreen.storyboard in Resources */,
 				044AB01C1D8DFD6400B6678F /* Assets.xcassets in Resources */,
 				044AB01A1D8DFD6400B6678F /* Main.storyboard in Resources */,
@@ -131,6 +169,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		56881639EA85CA203E0AB7C5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ArcanaDatabase/Pods-ArcanaDatabase-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		76EFC1F4B458DE2C71D77755 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ArcanaDatabase/Pods-ArcanaDatabase-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D0F16CA0C27197ED348F33E2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		044AB00D1D8DFD6400B6678F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -138,6 +224,8 @@
 			files = (
 				044AB0171D8DFD6400B6678F /* ViewController.swift in Sources */,
 				044AB0151D8DFD6400B6678F /* AppDelegate.swift in Sources */,
+				044AB02B1D8DFDC600B6678F /* GlobalConstants.swift in Sources */,
+				044AB02A1D8DFDC600B6678F /* ArcanaDatabase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,6 +269,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -230,6 +319,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -256,7 +346,9 @@
 		};
 		044AB0241D8DFD6400B6678F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 30413E90C0939B58766D250D /* Pods-ArcanaDatabase.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ArcanaDatabase/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -268,7 +360,9 @@
 		};
 		044AB0251D8DFD6400B6678F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0EB4105AF6E80ACF6446C865 /* Pods-ArcanaDatabase.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ArcanaDatabase/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -297,6 +391,7 @@
 				044AB0251D8DFD6400B6678F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
