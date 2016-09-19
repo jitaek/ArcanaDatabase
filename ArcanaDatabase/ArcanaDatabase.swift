@@ -331,7 +331,6 @@ class ArcanaDatabase: UIViewController {
                                 switch attIndex {
                                     
                                 case 0:
-                                    
                                     self.translate(attribute, key: "skillName2")
                                 case 1:
                                     self.dict.updateValue(attribute, forKey: "skillMana2")
@@ -473,31 +472,7 @@ class ArcanaDatabase: UIViewController {
                             break
                             
                         case 7:
-                            guard numberOfSkills == 3 else {
-                                //print("ONLY 1 OR 2 SKILL, DON'T COME THIS FAR")
-                                break
-                            }
-                            let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                             
-                            for (attIndex, a) in table!.xpath(".//td").enumerated() {
-                                guard let attribute = a.text else {
-                                    return
-                                }
-                                
-                                switch attIndex {
-                                    
-                                case 0:
-                                    
-                                    self.translate(attribute, key: "abilityName2")
-                                case 1:
-                                    
-                                    self.translate(attribute, key: "abilityDesc2")
-                                default:
-                                    break
-                                }
-                            }
-                            
-                        case 9:
                             if numberOfSkills == 1 {
                                 let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                                 
@@ -505,11 +480,53 @@ class ArcanaDatabase: UIViewController {
                                     guard let attribute = a.text else {
                                         return
                                     }
-                                    print(attIndex, a.text)
                                     switch attIndex {
                                         
                                     case 0:
-                                        self.translate(self.getTavern(attribute), key: "tavern")
+                                        print("NUMBER OF SKILLS IS 1 and tavern is \(attribute)")
+                                        self.dict.updateValue(_: self.getTavern(attribute), forKey: "tavern")
+                                        // case 1. added date.
+                                        
+                                    default:
+                                        break
+                                    }
+                                }
+                            }
+                            if numberOfSkills == 3 {
+                                let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
+                                
+                                for (attIndex, a) in table!.xpath(".//td").enumerated() {
+                                    guard let attribute = a.text else {
+                                        return
+                                    }
+                                    
+                                    switch attIndex {
+                                        
+                                    case 0:
+                                        
+                                        self.translate(attribute, key: "abilityName2")
+                                    case 1:
+                                        
+                                        self.translate(attribute, key: "abilityDesc2")
+                                    default:
+                                        break
+                                    }
+                                }
+
+                            }
+                            
+                        case 9:
+                            if numberOfSkills == 2 {
+                                let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
+                                
+                                for (attIndex, a) in table!.xpath(".//td").enumerated() {
+                                    guard let attribute = a.text else {
+                                        return
+                                    }
+                                    switch attIndex {
+                                        
+                                    case 0:
+                                        self.dict.updateValue(_: self.getTavern(attribute), forKey: "tavern")
                                         // case 1. added date.
                                         
                                     default:
@@ -518,26 +535,6 @@ class ArcanaDatabase: UIViewController {
                                 }
                             }
                         case 10:
-                            if numberOfSkills == 2 {
-                                let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
-                                
-                                for (attIndex, a) in table!.xpath(".//td").enumerated() {
-                                    guard let attribute = a.text else {
-                                        return
-                                    }
-                                    print(attIndex, a.text)
-                                    switch attIndex {
-                                        
-                                    case 0:
-                                        self.translate(self.getTavern(attribute), key: "tavern")
-                                        // case 1. added date.
-                                        
-                                    default:
-                                        break
-                                    }
-                                }
-                            }
-                        case 11:
                             if numberOfSkills == 3 {
                                 let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                                 
@@ -549,7 +546,7 @@ class ArcanaDatabase: UIViewController {
                                     switch attIndex {
                                         
                                     case 0:
-                                        self.translate(self.getTavern(attribute), key: "tavern")
+                                        self.dict.updateValue(_: self.getTavern(attribute), forKey: "tavern")
                                         // case 1. added date.
                                         
                                     default:
@@ -557,16 +554,32 @@ class ArcanaDatabase: UIViewController {
                                     }
                                 }
                             }
+//                        case 11:
+//                            if numberOfSkills == 3 {
+//                                let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
+//                                
+//                                for (attIndex, a) in table!.xpath(".//td").enumerated() {
+//                                    guard let attribute = a.text else {
+//                                        return
+//                                    }
+//                                    print(attIndex, a.text)
+//                                    switch attIndex {
+//                                        
+//                                    case 0:
+//                                        self.translate(self.getTavern(attribute), key: "tavern")
+//                                        // case 1. added date.
+//                                        
+//                                    default:
+//                                        break
+//                                    }
+//                                }
+//                            }
                         default:
                             break
                         }
                         
                     }
-                    // After fetching, print array
-                    //                    dispatch_async(dispatch_get_main_queue()) {
-                    //                        //self.uploadArcana()
-                    //
-                    //                    }
+                  
                     
                     
                     
@@ -839,12 +852,69 @@ class ArcanaDatabase: UIViewController {
         
     }
     
+    // Download one arcana
+    func downloadArcana() {
+        
+        download.enter()
+        // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
+        
+        let encodedString = "開拓姫メディア".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+        let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
+    
+        // proceed to download
+        
+        print("PARSING...")
+        print(encodedURL!)
+        
+        
+        do {
+            let html = try String(contentsOf: encodedURL!, encoding: String.Encoding.utf8)
+            
+            
+            // TODO: THERE ARE ACTUALLY 3 TYPES OF PAGES.
+            // IF IT IS THE OLDEST, IT WONT HAVE <HR>. SO INSTEAD OF PARSING LIKE AN OLD PAGE, SEARCH ARCANADATA FOR BASIC ATTRIBUTES, THEN ONLY GET SKILL/ABILITIES FROM HTML.
+            
+            
+            if html.contains("#ui_wikidb") {
+                self.downloadAttributes("new", html: html)
+                self.downloadWeaponAndPicture("new", url: encodedURL!)
+                
+            }
+                
+            else {
+                self.downloadAttributes("old", html: html)
+                self.downloadWeaponAndPicture("old", url: encodedURL!)
+                
+            }
+            
+            
+        }
+            
+        catch {
+            print(error)
+        }
+        
+        
+        self.download.notify(queue: DispatchQueue.main, execute: {
+            print("Finished translating.")
+            
+            self.loop.notify(queue: DispatchQueue.main, execute: {
+                print("Finished uploading.")
+                
+            })
+        })
+        
+        
+        
+    }
+    
+    // Download all arcanas
     func downloadArcana(_ index: Int) {
         
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
  
-            let encodedString = "言葉無き吟遊詩人ロクサーナ".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+            let encodedString = "荒野の孤狼ダスク".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
             let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
         
             // first check if this exists in firebase
@@ -854,7 +924,6 @@ class ArcanaDatabase: UIViewController {
             var exists = false
             
             for arcana in snapshot.children {
-                // (i as! NSDictionary)["iconURL"] as? String
                 if self.urls[index].contains(((arcana as! FIRDataSnapshot).value as! NSDictionary)["nameJP"] as! String) {
                     exists = true
                 }
@@ -964,9 +1033,10 @@ class ArcanaDatabase: UIViewController {
     
     func uploadArcana() {
         
+        // TODO: upload arcana's uid to a tavern directory.
         loop.enter()
         let ref = FIREBASE_REF.child("arcana")
-
+        
         
         print("STARTING UPLOAD PROCESS")
         
@@ -987,7 +1057,7 @@ class ArcanaDatabase: UIViewController {
             }
             
             if exists == true {
-                print("\(self.dict["nameKR"]) ALREADY EXISTS")
+                print("\(self.dict["nameKR"])! ALREADY EXISTS")
                 self.loop.leave()
             }
             
@@ -1013,6 +1083,14 @@ class ArcanaDatabase: UIViewController {
                     return
                 }
                 
+//                upload to tavernRef. only upload if it has a tavern.
+                if t != "" {
+                    
+                    let tavernRef = FIREBASE_REF.child("tavern/\(self.getTavernRef(tavern: t))/\(id)")
+                    tavernRef.setValue("true", withCompletionBlock: { completion in
+                        print("DONE")
+                    })
+                }
                 
                 
                 
@@ -1297,7 +1375,7 @@ class ArcanaDatabase: UIViewController {
     
     func getTavern(_ string: String) -> String {
         
-        let taverns = ["副都", "聖都", "賢者の塔", "迷宮山脈", "砂漠の湖都", "精霊島", "炎の九領", "海風の港", "夜明けの大海", "ケ者の大陸", "罪の大陸", "薄命の大陸", "鉄煙の大陸", "書架", "レムレス島", "魔神", "ガチャ", "グ交換"]
+        let taverns = ["副都", "聖都", "賢者の塔", "迷宮山脈", "湖都", "精霊島", "炎の九領", "海風の港", "夜明けの大海", "ケ者の大陸", "罪の大陸", "薄命の大陸", "鉄煙の大陸", "書架", "レムレス島", "魔神", "ガチャ", "グ交換"]
         var tav = ""
         
         for (index, t) in taverns.enumerated() {
@@ -1317,7 +1395,7 @@ class ArcanaDatabase: UIViewController {
             return "현자의탑"
         case "迷宮山脈":
             return "미궁산맥"
-        case "砂漠の湖都":
+        case "湖都":
             return "호수도시"
         case "精霊島":
             return "정령섬"
@@ -1343,7 +1421,7 @@ class ArcanaDatabase: UIViewController {
             return "마신"
         case "義勇軍":
             return "의용군"
-        case "ガチャ":
+        case "リングガチャ":
             return "링가챠"
         case "グ交換":
             return "링교환"
@@ -1353,6 +1431,54 @@ class ArcanaDatabase: UIViewController {
         
     }
 
+    func getTavernRef(tavern: String) -> String {
+        
+        switch tavern {
+            
+        case "부도":
+            return "capital"
+        case "성도":
+            return "holy"
+        case "현자의탑":
+            return "sage"
+        case "미궁산맥":
+            return "maze"
+        case "호수도시":
+            return "lake"
+        case "정령섬":
+            return "soul"
+        case "화염구령":
+            return "fire"
+        case "해풍의항구":
+            return "seaBreeze"
+        case "새벽대해":
+            return "daybreakOcean"
+        case "개들의대륙":
+            return "beast"
+        case "죄의대륙":
+            return "sin"
+        case "박명의대륙":
+            return "ephemerality"
+        case "철연의대륙":
+            return "iron"
+        case "연대기의대륙":
+            return "chronicle"
+        case "서가":
+            return "book"
+        case "레무레스섬":
+            return "lemures"
+        case "마신":
+            return "demon"
+        case "링가챠":
+            return "ringGacha"
+        case "링교환":
+            return "ringChange"
+        default:
+            return ""
+        }
+        
+    }
+    
     func getAffiliation(_ string: String) -> String {
         
         switch string {
@@ -1364,7 +1490,7 @@ class ArcanaDatabase: UIViewController {
             return "현자의탑"
         case "迷宮山脈":
             return "미궁산맥"
-        case "砂漠の湖都":
+        case "湖都":
             return "호수도시"
         case "精霊島":
             return "정령섬"
@@ -1534,7 +1660,8 @@ class ArcanaDatabase: UIViewController {
         super.viewDidLoad()
         retrieveURLS()
         //handleImage()
-        downloadArcana(0)
+        downloadArcana()
+//        downloadArcana(0)
 //        for i in urls {
 //            print(i)
 //        }
