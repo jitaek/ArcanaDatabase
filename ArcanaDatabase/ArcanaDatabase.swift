@@ -34,8 +34,9 @@ class ArcanaDatabase: UIViewController {
         let ref = FIREBASE_REF.child("arcana")
         ref.observe(.value, with: { snapshot in
             for i in snapshot.children {
-                if let imageURL = (i as! NSDictionary)["iconURL"] as? String {
-                    //let imageURL = snapshot.value!["iconURL"] as! String
+                
+                if let imageURL = ((i as! FIRDataSnapshot).value as! NSDictionary)["iconURL"] as? String {
+//                    ((arcana as! FIRDataSnapshot).value as! NSDictionary)["nameJP"] as! String
                     let url = URL(string: imageURL)
                     let task = URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
                         if error != nil {
@@ -712,14 +713,14 @@ class ArcanaDatabase: UIViewController {
                     self.translate(skillName1, key: "skillName1")
                     if let _ = attribute.indexOf(")*") {
                         let skillMana1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")*")!, offsetBy: 2)..<attribute.index(attribute.indexOf(")*")!, offsetBy: 3)))))
-                        self.translate(skillMana1, key: "skillMana1")
+                        self.dict.updateValue(_: skillMana1, forKey: "skillMana1")
                         let skillDesc1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")*")!, offsetBy: 3)..<attribute.endIndex))))
                         self.translate(skillDesc1, key: "skillDesc1")
                     }
                     
                     else {
                         let skillMana1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("(")!, offsetBy: 1)..<attribute.index(attribute.indexOf("(")!, offsetBy: 2)))))
-                        self.translate(skillMana1, key: "skillMana1")
+                        self.dict.updateValue(_: skillMana1, forKey: "skillMana1")
                         let skillDesc1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("(")!, offsetBy: 2)..<attribute.endIndex))))
                         self.translate(skillDesc1, key: "skillDesc1")
                     }
@@ -731,7 +732,7 @@ class ArcanaDatabase: UIViewController {
                             let kizunaName = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.startIndex..<attribute.indexOf("(")!))))
                             self.translate(kizunaName, key: "kizunaName")
                             let kizunaCost = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("+")!, offsetBy: 1)..<attribute.index(attribute.indexOf("+")!, offsetBy: 2)))))
-                            self.translate(kizunaCost, key: "kizunaCost")
+                            self.dict.updateValue(_: kizunaCost, forKey: "kizunaCost")
                             let kizunaAbility = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")　")!, offsetBy: 2)..<attribute.endIndex))))
                             self.translate(kizunaAbility, key: "kizunaAbility")
                         }
@@ -765,7 +766,7 @@ class ArcanaDatabase: UIViewController {
                             let kizunaName = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.startIndex..<attribute.indexOf("(")!))))
                             self.translate(kizunaName, key: "kizunaName")
                             let kizunaCost = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("+")!, offsetBy: 1)..<attribute.index(attribute.indexOf("+")!, offsetBy: 2)))))
-                            self.translate(kizunaCost, key: "kizunaCost")
+                            self.dict.updateValue(_: kizunaCost, forKey: "kizunaCost")
                             let kizunaAbility = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")　")!, offsetBy: 2)..<attribute.endIndex))))
                             self.translate(kizunaAbility, key: "kizunaAbility")
                         }
@@ -805,7 +806,7 @@ class ArcanaDatabase: UIViewController {
                         let kizunaName = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.startIndex..<attribute.indexOf("(")!))))
                         self.translate(kizunaName, key: "kizunaName")
                         let kizunaCost = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("+")!, offsetBy: 1)..<attribute.index(attribute.indexOf("+")!, offsetBy: 2)))))
-                        self.translate(kizunaCost, key: "kizunaCost")
+                        self.dict.updateValue(_: kizunaCost, forKey: "kizunaCost")
                         let kizunaAbility = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")　")!, offsetBy: 2)..<attribute.endIndex))))
                         self.translate(kizunaAbility, key: "kizunaAbility")
                     }
@@ -854,7 +855,7 @@ class ArcanaDatabase: UIViewController {
             
             for arcana in snapshot.children {
                 // (i as! NSDictionary)["iconURL"] as? String
-                if self.urls[index].contains((arcana as! NSDictionary)["nameJP"] as! String) {
+                if self.urls[index].contains(((arcana as! FIRDataSnapshot).value as! NSDictionary)["nameJP"] as! String) {
                     exists = true
                 }
                 
@@ -977,7 +978,7 @@ class ArcanaDatabase: UIViewController {
             var exists = false
             
             for i in snapshot.children {
-                let s = (i as? NSDictionary)?["nameJP"] as! String
+                let s = ((i as! FIRDataSnapshot).value as! NSDictionary)["nameJP"] as! String
                 let d = self.dict["nameJP"]!
                 if s == d {
                     exists = true
