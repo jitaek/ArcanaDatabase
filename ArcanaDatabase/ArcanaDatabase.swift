@@ -8,12 +8,12 @@
 
 
 import UIKit
-//import Kanna
-//import SwiftyJSON
+import Kanna
+import SwiftyJSON3
 import Firebase
 import Foundation
 
-/*
+
 class ArcanaDatabase: UIViewController {
 
     // let google = "https://www.google.com/searchbyimage?&image_url="
@@ -25,7 +25,6 @@ class ArcanaDatabase: UIViewController {
     let arcanaURL = "幸運に導く戦士ニンファ"
     //let dispatch_group = dispatch_group_create()
 
-    let priority = DispatchQueue.GlobalQueuePriority.default
     var attributeValues = [String]()
     var urls = [String]()
     var dict = [String : String]()
@@ -35,7 +34,7 @@ class ArcanaDatabase: UIViewController {
         let ref = FIREBASE_REF.child("arcana")
         ref.observe(.value, with: { snapshot in
             for i in snapshot.children {
-                if let imageURL = (i as AnyObject).value?["iconURL"] as? String {
+                if let imageURL = (i as! NSDictionary)["iconURL"] as? String {
                     //let imageURL = snapshot.value!["iconURL"] as! String
                     let url = URL(string: imageURL)
                     let task = URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
@@ -47,7 +46,7 @@ class ArcanaDatabase: UIViewController {
                             print("DOWNLOADED IMAGE!")
                             // upload to firebase storage.
                             
-                            let arcanaImageRef = STORAGE_REF.child("image/arcana/\(i.value!["uid"] as! String)/icon.jpg")
+                            let arcanaImageRef = STORAGE_REF.child("image/arcana/\((i as! NSDictionary)["uid"] as! String)/icon.jpg")
                             
                             arcanaImageRef.put(NSData(data: data) as Data, metadata: nil) { metadata, error in
                                 if (error != nil) {
@@ -111,9 +110,9 @@ class ArcanaDatabase: UIViewController {
                     
                     var textWithWeapon = ""
                     // Search for nodes by XPath
-                    findingTable : for (index, link) in doc.xpath("//table[@id='']").enumerate() {
+                    findingTable : for (index, link) in doc.xpath("//table[@id='']").enumerated() {
                         
-                        let tables = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                        let tables = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                         
                         guard let linkText = link.text else {
                             return
@@ -128,15 +127,15 @@ class ArcanaDatabase: UIViewController {
                                 }
                             }
                         }
-                        if linkText.containsString("斬") || linkText.containsString("打") || linkText.containsString("突") || linkText.containsString("弓") || linkText.containsString("魔") || linkText.containsString("聖") || linkText.containsString("拳") || linkText.containsString("銃") || linkText.containsString("狙") {
+                        if linkText.contains("斬") || linkText.contains("打") || linkText.contains("突") || linkText.contains("弓") || linkText.contains("魔") || linkText.contains("聖") || linkText.contains("拳") || linkText.contains("銃") || linkText.contains("狙") {
                             
                             
                             // Nested Loop. Should return right at first iteration.
-                            for (weaponIndex, a) in tables!.xpath(".//a['title']").enumerate() {
+                            for (weaponIndex, a) in tables!.xpath(".//a['title']").enumerated() {
                                 
                                 if weaponIndex == 0 {
                                     if let text = a.text {
-                                        textWithWeapon.appendContentsOf(text)
+                                        textWithWeapon.append(text)
                                         break findingTable
                                     }
                                 }
@@ -191,15 +190,15 @@ class ArcanaDatabase: UIViewController {
                     
                     
                     // Fetched required attributes
-                    for (index, link) in doc.xpath("//tbody").enumerate() {
+                    for (index, link) in doc.xpath("//tbody").enumerated() {
                         print(index, link.text!)
                         switch index {
                             
                             
                         case 0: // Arcana base info
-                            let table = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                            let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                             
-                            for (attIndex, a) in table!.xpath(".//td").enumerate() {
+                            for (attIndex, a) in table!.xpath(".//td").enumerated() {
                                 
                                 guard let attribute = a.text else {
                                     return
@@ -249,9 +248,9 @@ class ArcanaDatabase: UIViewController {
                             
                             
                         case 2: // Kizuna
-                            let table = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                            let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                             
-                            for (attIndex, a) in table!.xpath(".//td").enumerate() {
+                            for (attIndex, a) in table!.xpath(".//td").enumerated() {
                                 guard let attribute = a.text else {
                                     return
                                 }
@@ -271,9 +270,9 @@ class ArcanaDatabase: UIViewController {
                             }
                             
                         case 3: // Skill 1
-                            let table = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                            let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                             
-                            for (attIndex, a) in table!.xpath(".//td").enumerate() {
+                            for (attIndex, a) in table!.xpath(".//td").enumerated() {
                                 guard let attribute = a.text else {
                                     return
                                 }
@@ -300,9 +299,9 @@ class ArcanaDatabase: UIViewController {
                             if numberOfSkills == 1 {
                                 // Just get ability 1
                                 self.dict.updateValue("1", forKey: "skillCount")
-                                let table = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                                let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                                 
-                                for (attIndex, a) in table!.xpath(".//td").enumerate() {
+                                for (attIndex, a) in table!.xpath(".//td").enumerated() {
                                     guard let attribute = a.text else {
                                         return
                                     }
@@ -322,9 +321,9 @@ class ArcanaDatabase: UIViewController {
                                 break
                             }
                             
-                            let table = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                            let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                             
-                            for (attIndex, a) in table!.xpath(".//td").enumerate() {
+                            for (attIndex, a) in table!.xpath(".//td").enumerated() {
                                 guard let attribute = a.text else {
                                     return
                                 }
@@ -353,9 +352,9 @@ class ArcanaDatabase: UIViewController {
                                     break
                                 }
                                 // Just get ability 2
-                                let table = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                                let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                                 //print("ABILITY 2 TEXT")
-                                for (attIndex, a) in table!.xpath(".//td").enumerate() {
+                                for (attIndex, a) in table!.xpath(".//td").enumerated() {
                                     guard let attribute = a.text else {
                                         return
                                     }
@@ -376,9 +375,9 @@ class ArcanaDatabase: UIViewController {
                             case 2:
                                 // Just get ability 1
                                 self.dict.updateValue("2", forKey: "skillCount")
-                                let table = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                                let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                                 
-                                for (attIndex, a) in table!.xpath(".//td").enumerate() {
+                                for (attIndex, a) in table!.xpath(".//td").enumerated() {
                                     guard let attribute = a.text else {
                                         return
                                     }
@@ -398,9 +397,9 @@ class ArcanaDatabase: UIViewController {
                                 
                             default:
                                 
-                                let table = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                                let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                                 
-                                for (attIndex, a) in table!.xpath(".//td").enumerate() {
+                                for (attIndex, a) in table!.xpath(".//td").enumerated() {
                                     
                                     guard let attribute = a.text else {
                                         print("ATTRIBUTE IS UNWRAPPED")
@@ -428,9 +427,9 @@ class ArcanaDatabase: UIViewController {
                                 break
                             }
                             else if numberOfSkills == 2 { // numberofskills 2, get ability 2
-                                let table = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                                let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                                 
-                                for (attIndex, a) in table!.xpath(".//td").enumerate() {
+                                for (attIndex, a) in table!.xpath(".//td").enumerated() {
                                     guard let attribute = a.text else {
                                         return
                                     }
@@ -450,9 +449,9 @@ class ArcanaDatabase: UIViewController {
                             else {  // numberofskills = 3
                                 self.dict.updateValue("3", forKey: "skillCount")
                                 
-                                let table = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                                let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                                 
-                                for (attIndex, a) in table!.xpath(".//td").enumerate() {
+                                for (attIndex, a) in table!.xpath(".//td").enumerated() {
                                     guard let attribute = a.text else {
                                         return
                                     }
@@ -477,9 +476,9 @@ class ArcanaDatabase: UIViewController {
                                 //print("ONLY 1 OR 2 SKILL, DON'T COME THIS FAR")
                                 break
                             }
-                            let table = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                            let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                             
-                            for (attIndex, a) in table!.xpath(".//td").enumerate() {
+                            for (attIndex, a) in table!.xpath(".//td").enumerated() {
                                 guard let attribute = a.text else {
                                     return
                                 }
@@ -499,9 +498,9 @@ class ArcanaDatabase: UIViewController {
                             
                         case 9:
                             if numberOfSkills == 1 {
-                                let table = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                                let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                                 
-                                for (attIndex, a) in table!.xpath(".//td").enumerate() {
+                                for (attIndex, a) in table!.xpath(".//td").enumerated() {
                                     guard let attribute = a.text else {
                                         return
                                     }
@@ -519,9 +518,9 @@ class ArcanaDatabase: UIViewController {
                             }
                         case 10:
                             if numberOfSkills == 2 {
-                                let table = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                                let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                                 
-                                for (attIndex, a) in table!.xpath(".//td").enumerate() {
+                                for (attIndex, a) in table!.xpath(".//td").enumerated() {
                                     guard let attribute = a.text else {
                                         return
                                     }
@@ -539,9 +538,9 @@ class ArcanaDatabase: UIViewController {
                             }
                         case 11:
                             if numberOfSkills == 3 {
-                                let table = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                                let table = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                                 
-                                for (attIndex, a) in table!.xpath(".//td").enumerate() {
+                                for (attIndex, a) in table!.xpath(".//td").enumerated() {
                                     guard let attribute = a.text else {
                                         return
                                     }
@@ -581,11 +580,11 @@ class ArcanaDatabase: UIViewController {
             if let doc = Kanna.HTML(html: html, encoding: String.Encoding.utf8) {
                 
                 // Search for nodes by XPath
-                for (index, link) in doc.xpath("//table[@id='']").enumerate() {
+                for (index, link) in doc.xpath("//table[@id='']").enumerated() {
                     
-                    let tables = Kanna.HTML(html: link.innerHTML!, encoding: NSUTF8StringEncoding)
+                    let tables = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                     
-                    guard let linkText = link.text else {
+                    guard let _ = link.text else {
                         return
                     }
                     if index == 0 {
@@ -693,10 +692,10 @@ class ArcanaDatabase: UIViewController {
                     // Get group inside ()
                     var group = String()
                     if let _ = attribute.indexOf("(") {
-                        group = NSString(string: attribute.substring(with: Range<String.Index>(<#T##String.CharacterView corresponding to your index##String.CharacterView#>.index(attribute.indexOf("(")!, offsetBy: 1)..<attribute.indexOf(")")!))) as String
+                        group = NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("(")!, offsetBy: 1)..<attribute.indexOf(")")!))) as String
                     }
                     else if let _ = attribute.indexOf("（") {
-                        group = NSString(string: attribute.substring(with: Range<String.Index>(<#T##String.CharacterView corresponding to your index##String.CharacterView#>.index(attribute.indexOf("（")!, offsetBy: 1)..<attribute.indexOf("）")!))) as String
+                        group = NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("（")!, offsetBy: 1)..<attribute.indexOf("）")!))) as String
                     }
                     else {
                         group = attribute
@@ -746,7 +745,7 @@ class ArcanaDatabase: UIViewController {
                     else if let _ = attribute.indexOf("　") {
                         let abilityName1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.startIndex..<attribute.index(before: attribute.indexOf("　")!)))))
                         self.translate(abilityName1, key: "abilityName1")
-                        let abilityDesc1 = String(NSString(string: attribute.substring(with: Range<String.Index>(<#T##String.CharacterView corresponding to your index##String.CharacterView#>.index(attribute.indexOf("　")!, offsetBy: 1)..<attribute.endIndex))))
+                        let abilityDesc1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("　")!, offsetBy: 1)..<attribute.endIndex))))
                         self.translate(abilityDesc1, key: "abilityDesc1")
                     }
                     else {
@@ -854,8 +853,8 @@ class ArcanaDatabase: UIViewController {
             var exists = false
             
             for arcana in snapshot.children {
-
-                if self.urls[index].contains((arcana as AnyObject).value!["nameJP"] as! String) {
+                // (i as! NSDictionary)["iconURL"] as? String
+                if self.urls[index].contains((arcana as! NSDictionary)["nameJP"] as! String) {
                     exists = true
                 }
                 
@@ -939,15 +938,15 @@ class ArcanaDatabase: UIViewController {
                         
 
                         // get rid of &quot; and &lt &gt;
-                        var t = translatedText.stringByReplacingOccurrencesOfString("&quot;", withString: " ")
-                        t = t.stringByReplacingOccurrencesOfString("&lt;", withString: "")
-                        t = t.stringByReplacingOccurrencesOfString("&gt;", withString: "")
+                        var t = translatedText.replacingOccurrences(of: "&quot;", with: " ")
+                        t = t.replacingOccurrences(of: "&lt;", with: "")
+                        t = t.replacingOccurrences(of: "&gt;", with: "")
                         // some have quotes at start, so remove whitespace
-                        t = t.stringByTrimmingCharactersInSet(.whitespaceAndNewlineCharacterSet())
+                        t = t.trimmingCharacters(in: .whitespacesAndNewlines)
                         // remove double spaces
-                        t = t.stringByReplacingOccurrencesOfString("  ", withString: " ")
+                        t = t.replacingOccurrences(of: "  ", with: " ")
                         // remove space in front of %
-                        t = t.stringByReplacingOccurrencesOfString(" %", withString: "%")
+                        t = t.replacingOccurrences(of: " %", with: "%")
                         print("TRANSLATED TEXT IS \(t)")
                         self.dict.updateValue(t, forKey: key)
                         //self.dict.updateValue(String(htmlEncodedString: final), forKey: key)
@@ -978,7 +977,7 @@ class ArcanaDatabase: UIViewController {
             var exists = false
             
             for i in snapshot.children {
-                let s = (i as AnyObject).value!["nameJP"] as! String
+                let s = (i as? NSDictionary)?["nameJP"] as! String
                 let d = self.dict["nameJP"]!
                 if s == d {
                     exists = true
@@ -1437,7 +1436,7 @@ class ArcanaDatabase: UIViewController {
         let data: Data? = try? Data(contentsOf: URL(fileURLWithPath: path!))
         //print(data)
         do {
-            let jsonObject : AnyObject! =  try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers)
+            let jsonObject : Any! =  try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers)
             let json = JSON(jsonObject)
             let a = string.substring(to: string.characters.index(string.startIndex, offsetBy: 3))
             var contains = false
@@ -1445,7 +1444,7 @@ class ArcanaDatabase: UIViewController {
             for (_, subJson) : (String, JSON) in json["array"] {
                 
                 // Checking for nickname because of ver 2.
-                if string.containsString(subJson["nickname"].stringValue) {
+                if string.contains(subJson["nickname"].stringValue) {
                     // check if we need all attributes(Oldest) or some
 //                    if type == "oldest" {
 //                        let rarity = subJson["rank"].stringValue
@@ -1463,11 +1462,10 @@ class ArcanaDatabase: UIViewController {
                     let nameJP = subJson["name"].stringValue
                     var nickJPQuotes = subJson["nickname"].stringValue
                     // get rid of quotation in names.
-                    nickJPQuotes = nickJPQuotes.stringByReplacingOccurrencesOfString("“", withString: " ")
-                    nickJPQuotes = nickJPQuotes.stringByReplacingOccurrencesOfString("”", withString: " ")
+                    nickJPQuotes = nickJPQuotes.replacingOccurrences(of: "“", with: " ")
+                    nickJPQuotes = nickJPQuotes.replacingOccurrences(of: "”", with: " ")
                     // some have quotes at start, so remove whitespace
-                    let nickJP = nickJPQuotes.stringByTrimmingCharactersInSet(.whitespaceAndNewlineCharacterSet())
-                    
+                    let nickJP = nickJPQuotes.trimmingCharacters(in: .whitespacesAndNewlines)
                     let affiliation = subJson["syozoku"].stringValue
                     self.translate(nameJP, key: "nameKR")
                     self.translate(nickJP, key: "nickKR")
@@ -1514,7 +1512,7 @@ class ArcanaDatabase: UIViewController {
         let data: Data? = try? Data(contentsOf: URL(fileURLWithPath: path!))
         
         do {
-            let jsonObject : AnyObject! =  try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers)
+            let jsonObject : Any! =  try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers)
             let json = JSON(jsonObject)
             
             
@@ -1577,7 +1575,7 @@ extension String {
         return range(of: string, options: .literal, range: nil, locale: nil)?.lowerBound
     }
     
-    init(htmlEncodedString: String) {
+    init?(htmlEncodedString: String) {
         do {
             let encodedData = htmlEncodedString.data(using: String.Encoding.utf8)!
             let attributedOptions : [String: AnyObject] = [
@@ -1606,4 +1604,3 @@ extension String {
     
 }
 
-*/
