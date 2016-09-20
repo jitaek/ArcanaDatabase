@@ -163,6 +163,40 @@ class ArcanaDatabase: UIViewController {
         
     }
 
+    func downloadTest(_ string: String, html: String) {
+        
+        // TODO. iterate through <th>. if I get useful attribute, append the index to a new array. then i iterate through <td> if index == td.index, do stuff with the td. should I append to dictionary? [index, <th>.name]
+  
+        var tables = [String]()
+        
+        if string == "new" {
+            
+            print("IDENTIFIED NEW PAGE")
+            
+            // Kanna, search through html
+            
+            if let doc = Kanna.HTML(html: html, encoding: String.Encoding.utf8) {
+                
+                
+                
+                for (index, table) in doc.xpath("//table").enumerated() {
+                    
+                    let t = Kanna.HTML(html: table.innerHTML!, encoding: String.Encoding.utf8)
+                    
+                    for (index, th) in t!.xpath("//th").enumerated() {
+                        if th.text!.contains("ABILITY") {
+                            tables.append(table.innerHTML!)
+                        }
+                    }
+                    
+                }
+            }
+        }
+        
+        for i in tables {
+            print(i)
+        }
+    }
     // MARK: Given old or new page, parses the page.
     func downloadAttributes(_ string: String, html: String) {
         
@@ -192,7 +226,8 @@ class ArcanaDatabase: UIViewController {
                     
                     // Fetched required attributes
                     for (index, link) in doc.xpath("//tbody").enumerated() {
-                        print(index, link.text!)
+//                        print(index, link.text!)
+                        
                         switch index {
                             
                             
@@ -876,7 +911,8 @@ class ArcanaDatabase: UIViewController {
             
             
             if html.contains("#ui_wikidb") {
-                self.downloadAttributes("new", html: html)
+//                self.downloadAttributes("new", html: html)
+                self.downloadTest("new", html: html)
                 self.downloadWeaponAndPicture("new", url: encodedURL!)
                 
             }
@@ -990,7 +1026,7 @@ class ArcanaDatabase: UIViewController {
     func translate(_ value: String, key: String) {
         
         
-        
+        /*
         let encodedString = value.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         
         if let encodedString = encodedString {
@@ -1028,7 +1064,7 @@ class ArcanaDatabase: UIViewController {
             task.resume()
         }
         
-
+*/
     }
     
     func uploadArcana() {
