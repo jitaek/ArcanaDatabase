@@ -203,18 +203,18 @@ class ArcanaDatabase: UIViewController {
                                         
                                         // check if 2nd ability
                                         if i == "ABILITY" && tables["ABILITY"] != nil {
-                                            tables.updateValue(body.text!, forKey: "ABILITY2")
+                                            tables.updateValue(body.text!.trimmingCharacters(in: .whitespacesAndNewlines), forKey: "ABILITY2")
                                         }
                                         else {
                                             
-                                            tables.updateValue(body.text!, forKey: i)
+                                            tables.updateValue(body.text!.trimmingCharacters(in: .whitespacesAndNewlines), forKey: i)
                                         }
                                         
                                     }
                                 }
                                 if oneSkill == true {
                                     if th.text!.contains("SKILL") {
-                                       tables.updateValue(body.text!, forKey: "SKILL")
+                                       tables.updateValue(body.text!.trimmingCharacters(in: .whitespacesAndNewlines), forKey: "SKILL")
                                     }
                                 }
                                 
