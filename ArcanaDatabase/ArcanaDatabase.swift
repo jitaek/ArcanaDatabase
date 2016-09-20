@@ -167,34 +167,71 @@ class ArcanaDatabase: UIViewController {
         
         // TODO. iterate through <th>. if I get useful attribute, append the index to a new array. then i iterate through <td> if index == td.index, do stuff with the td. should I append to dictionary? [index, <th>.name]
   
-        var tables = [String]()
+        var tables = [String : String]()
         
         if string == "new" {
+            
+            let usefulAttributes = ["名　前", "絆ステタイプ", "SKILL 1", "SKILL 2", "SKILL 3", "ABILITY", "絆の物語", "入手方法"]
             
             print("IDENTIFIED NEW PAGE")
             
             // Kanna, search through html
+            var oneSkill = true
+            if html.contains("SKILL 1") {
+                oneSkill = false
+            }
             
             if let doc = Kanna.HTML(html: html, encoding: String.Encoding.utf8) {
-                
-                
-                
-                for (index, table) in doc.xpath("//table").enumerated() {
-                    
+            
+                // Now getting tables.
+                for table in doc.xpath("//table") {
+                    // getting the innerhtml of tables. do i need to do this?
                     let t = Kanna.HTML(html: table.innerHTML!, encoding: String.Encoding.utf8)
-                    
+                    // for each table, iterate through the <th>
                     for (index, th) in t!.xpath("//th").enumerated() {
-                        if th.text!.contains("ABILITY") {
-                            tables.append(table.innerHTML!)
+                        
+//                        print(index, th.text!)
+                        // each table has only 1 tbody anyways so get it
+                        for (zero, body) in t!.xpath("//tbody").enumerated() {
+                            if zero == 0 {
+                                
+                                // get the table that contains this <th>
+                                
+                                for i in usefulAttributes {
+                                    
+                                    if th.text!.contains(i) {
+                                        
+                                        // check if 2nd ability
+                                        if i == "ABILITY" && tables["ABILITY"] != nil {
+                                            tables.updateValue(body.text!, forKey: "ABILITY2")
+                                        }
+                                        else {
+                                            
+                                            tables.updateValue(body.text!, forKey: i)
+                                        }
+                                        
+                                    }
+                                }
+                                if oneSkill == true {
+                                    if th.text!.contains("SKILL") {
+                                       tables.updateValue(body.text!, forKey: "SKILL")
+                                    }
+                                }
+                                
+                                
+                                break
+                            }
                         }
+                        
+
                     }
                     
                 }
             }
         }
         
-        for i in tables {
-            print(i)
+        for (key, value) in tables {
+            print(key, value)
         }
     }
     // MARK: Given old or new page, parses the page.
@@ -893,7 +930,7 @@ class ArcanaDatabase: UIViewController {
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
         
-        let encodedString = "開拓姫メディア".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+        let encodedString = "荒野の孤狼ダスク".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
     
         // proceed to download
