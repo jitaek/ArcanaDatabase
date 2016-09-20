@@ -148,7 +148,7 @@ class ArcanaDatabase: UIViewController {
         if string == "new" {
             var tables = [String : String]()
             var skillCount = "1"
-            let usefulAttributes = ["名　前", "武器タイプ", "絆ステタイプ", "SKILL 1", "SKILL 2", "SKILL 3", "ABILITY", "絆の物語", "入手方法"]
+            let usefulAttributes = ["名　前", "武器タイプ", "絆ステタイプ", "SKILL 1", "SKILL 2", "SKILL 3", "ABILITY", "絆の物語", "入手方法", "運命の物語", "CHAIN STORY"]
             if html.contains("SKILL 3") {
                 skillCount = "3"
             } else if html.contains("SKILL 2") {
@@ -170,7 +170,7 @@ class ArcanaDatabase: UIViewController {
                     // getting the innerhtml of tables. do i need to do this?
                     // for each table, iterate through the <th>
                     for th in table.xpath(".//th") {
-                        //                        print(index, th.text)
+//                                                print(index, th.text)
                         
                         for i in usefulAttributes {
                             
@@ -178,7 +178,6 @@ class ArcanaDatabase: UIViewController {
                                 
                                 // check if 2nd ability
                                 if i == "ABILITY" && tables["ABILITY"] != nil {
-                                    //                                            print(body.innerHTML)
                                     tables.updateValue(table.innerHTML!, forKey: "ABILITY2")
                                     
                                 }
@@ -199,7 +198,6 @@ class ArcanaDatabase: UIViewController {
                     
                 }
             }
-            
             for (key, value) in tables {
                 
                 let parse = Kanna.HTML(html: value, encoding: String.Encoding.utf8)
@@ -217,6 +215,7 @@ class ArcanaDatabase: UIViewController {
                                 self.dict.updateValue(attribute, forKey: "nameJP")
                                 self.translate(attribute, forKey: "nameKR")
                             }
+                            
                         case 1:
                             self.dict.updateValue(self.getRarity(attribute), forKey: "rarity")
                         case 3:
@@ -383,21 +382,20 @@ class ArcanaDatabase: UIViewController {
                         
                         let attribute = link.text!
                         if attribute.contains("精霊石") {
-                            self.dict.updateValue(String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("Lv:")!, offsetBy: 3)..<attribute.index(before: attribute.indexOf(" /")!))))), forKey: "chainStone")
+                            let trailingString = attribute.substring(from: attribute.indexOf("Lv:")!)
+                            self.dict.updateValue(String(NSString(string: trailingString.substring(with: Range<String.Index>(trailingString.index(trailingString.indexOf("Lv:")!, offsetBy: 3)..<trailingString.index(before: trailingString.indexOf(" /")!))))), forKey: "chainStone")
+                            break
                         }
                         
                     }
                     
                 case "CHAIN STORY":
                     for (index, link) in parse!.xpath("//td").enumerated() {
-                        
+                        print("CHAINIENFIOWNEF")
                         let attribute = link.text!
-                        switch index {
-                        case 0:
+                        if attribute.contains("章") && attribute.contains("】") {
                             self.translate(attribute, forKey: "chainStory")
-                        default:
                             break
-                            
                         }
                         
                     }
@@ -682,7 +680,7 @@ class ArcanaDatabase: UIViewController {
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
         
-        let encodedString = "裏カジノの支配者トリッシュ".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+        let encodedString = "独裁王子イラリオン".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
     
         // proceed to download
@@ -928,6 +926,21 @@ class ArcanaDatabase: UIViewController {
                 
                 ref.updateChildValues(arcanaRef, withCompletionBlock: { completion in
                     print("UPLOADED ARCANA")
+                    // check for chainStory, chainStone, dateAdded
+                    let arcanaIDRef = FIREBASE_REF.child("arcana/\(id)")
+                    if let d = self.dict["dateAdded"] {
+                        arcanaIDRef.updateChildValues(["dateAdded" : "\(d)"])
+                        
+                    }
+                    if let cStory = self.dict["chainStory"] {
+                        arcanaIDRef.updateChildValues(["chainStory" : "\(cStory)"])
+                        
+                    }
+                    if let cStone = self.dict["chainStone"] {
+                        arcanaIDRef.updateChildValues(["chainStone" : "\(cStone)"])
+                        
+                    }
+                    
                     // Check if arcana was in file. If yes, get nicknames, iconURL
                     
                     if let nnKR = self.dict["nickKR"], let nnJP = self.dict["nickJP"], let iconURL = self.dict["iconURL"] {
@@ -935,6 +948,7 @@ class ArcanaDatabase: UIViewController {
                         let nickNameAndIconRef = ["nickNameKR" : "\(nnKR)", "nickNameJP" : "\(nnJP)", "iconURL" : "\(iconURL)"]
                         //dispatch_group_enter(self.loop)
                         nickNameRef.updateChildValues(nickNameAndIconRef, withCompletionBlock: { completion in
+                            
                             print("uploaded nickname and iconurl")
                             self.loop.leave()
                         })
@@ -946,6 +960,9 @@ class ArcanaDatabase: UIViewController {
                     self.loop.notify(queue: DispatchQueue.main, execute: { // Calls the given block when all blocks are finished in the group.
                         print("notified")
         //                dispatch_group_wait(self.group, 3000)
+                        
+                        
+                        
                         // Check if arcana has 2 abilities
                         if r.contains("5") || r.contains("4") {
                             print("RARITY IS 4 or 5")
