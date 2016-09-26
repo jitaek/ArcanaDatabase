@@ -170,7 +170,6 @@ class ArcanaDatabase: UIViewController {
                     // getting the innerhtml of tables. do i need to do this?
                     // for each table, iterate through the <th>
                     for th in table.xpath(".//th") {
-//                                                print(index, th.text)
                         
                         for i in usefulAttributes {
                             
@@ -235,7 +234,6 @@ class ArcanaDatabase: UIViewController {
                     
                     for (index, link) in parse!.xpath("//td").enumerated() {
                         let attribute = link.text!
-
                         switch index {
 
                         case 1:
@@ -329,7 +327,6 @@ class ArcanaDatabase: UIViewController {
                     for (index, link) in parse!.xpath("//td").enumerated() {
                         
                         let attribute = link.text!
-                        
                         switch index {
                         case 0:
                             self.translate(attribute, forKey: "abilityName1")
@@ -378,19 +375,19 @@ class ArcanaDatabase: UIViewController {
                     
                     
                 case "運命の物語":
-                    for (index, link) in parse!.xpath("//td").enumerated() {
+                    for link in parse!.xpath("//td") {
                         
                         let attribute = link.text!
                         if attribute.contains("精霊石") {
                             let trailingString = attribute.substring(from: attribute.indexOf("Lv:")!)
-                            self.dict.updateValue(String(NSString(string: trailingString.substring(with: Range<String.Index>(trailingString.index(trailingString.indexOf("Lv:")!, offsetBy: 3)..<trailingString.index(before: trailingString.indexOf(" /")!))))), forKey: "chainStone")
+                            self.dict.updateValue(String(NSString(string: trailingString.substring(with: Range<String.Index>(trailingString.index(trailingString.indexOf("Lv:")!, offsetBy: 3)..<trailingString.index(before: trailingString.indexOf("/")!))))), forKey: "chainStone")
                             break
                         }
                         
                     }
                     
                 case "CHAIN STORY":
-                    for (index, link) in parse!.xpath("//td").enumerated() {
+                    for link in parse!.xpath("//td") {
                         print("CHAINIENFIOWNEF")
                         let attribute = link.text!
                         if attribute.contains("章") && attribute.contains("】") {
@@ -459,7 +456,7 @@ class ArcanaDatabase: UIViewController {
             var usefulAttributes = [String]()
             var foundRarity = true
             for i in lines {
-                if i.contains("名　前") || i.contains("レアリティ") || i.contains("コ　ス　ト") || i.contains("コスト") || i.contains("職　業") || i.contains("職業") || i.contains("武器タイプ") || i.contains("ＳＫＩＬＬ") || i.contains("ＡＢＩＬＩＴＹ") || i.contains("絆アビリティ") || i.contains("入　手　方　法") {
+                if i.contains("名　前") || i.contains("レアリティ") || i.contains("コ　ス　ト") || i.contains("コスト") || i.contains("職　業") || i.contains("職業") || i.contains("武器タイプ") || i.contains("ＳＫＩＬＬ") || i.contains("ＡＢＩＬＩＴＹ") || i.contains("絆アビリティ") || i.contains("運命の物語") || i.contains("入　手　方　法") {
                     usefulAttributes.append(i)
                     
                 }
@@ -549,7 +546,7 @@ class ArcanaDatabase: UIViewController {
                     if let _ = attribute.indexOf(")*") {
                         let skillMana1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")*")!, offsetBy: 2)..<attribute.index(attribute.indexOf(")*")!, offsetBy: 3)))))
                         self.dict.updateValue(_: skillMana1, forKey: "skillMana1")
-                        let skillDesc1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")*")!, offsetBy: 3)..<attribute.endIndex))))
+                        let skillDesc1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")*")!, offsetBy: 4)..<attribute.endIndex))))
                         self.translate(skillDesc1, forKey: "skillDesc1")
                     }
                     
@@ -568,13 +565,13 @@ class ArcanaDatabase: UIViewController {
                             self.translate(kizunaName, forKey: "kizunaName")
                             let kizunaCost = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("+")!, offsetBy: 1)..<attribute.index(attribute.indexOf("+")!, offsetBy: 2)))))
                             self.dict.updateValue(_: kizunaCost, forKey: "kizunaCost")
-                            let kizunaAbility = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")　")!, offsetBy: 2)..<attribute.endIndex))))
-                            self.translate(kizunaAbility, forKey: "kizunaAbility")
+                            let kizunaDesc = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")　")!, offsetBy: 2)..<attribute.endIndex))))
+                            self.translate(kizunaDesc, forKey: "kizunaDesc")
                         }
                         else {
                             self.dict.updateValue("정보 없음", forKey: "kizunaName")
                             self.dict.updateValue("-", forKey: "kizunaCost")
-                            self.dict.updateValue("정보 없음", forKey: "kizunaAbility")
+                            self.dict.updateValue("정보 없음", forKey: "kizunaDesc")
                         }
 
                     }
@@ -602,13 +599,13 @@ class ArcanaDatabase: UIViewController {
                             self.translate(kizunaName, forKey: "kizunaName")
                             let kizunaCost = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("+")!, offsetBy: 1)..<attribute.index(attribute.indexOf("+")!, offsetBy: 2)))))
                             self.dict.updateValue(_: kizunaCost, forKey: "kizunaCost")
-                            let kizunaAbility = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")　")!, offsetBy: 2)..<attribute.endIndex))))
-                            self.translate(kizunaAbility, forKey: "kizunaAbility")
+                            let kizunaDesc = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")　")!, offsetBy: 2)..<attribute.endIndex))))
+                            self.translate(kizunaDesc, forKey: "kizunaDesc")
                         }
                         else {
                             self.dict.updateValue("정보 없음", forKey: "kizunaName")
                             self.dict.updateValue("-", forKey: "kizunaCost")
-                            self.dict.updateValue("정보 없음", forKey: "kizunaAbility")
+                            self.dict.updateValue("정보 없음", forKey: "kizunaDesc")
                         }
                         
                     }
@@ -635,18 +632,33 @@ class ArcanaDatabase: UIViewController {
                     if numberOfAbilities == 0 {
                         break
                     } else if numberOfAbilities == 1 {
-                        self.dict.updateValue(self.getTavern(attribute), forKey: "tavern")
+                        if attribute.contains("精霊石") {
+                            let trailingString = attribute.substring(from: attribute.indexOf("Lv:")!)
+                            self.dict.updateValue(String(NSString(string: trailingString.substring(with: Range<String.Index>(trailingString.index(trailingString.indexOf("Lv:")!, offsetBy: 3)..<trailingString.index(before: trailingString.indexOf("/")!))))), forKey: "chainStone")
+                        }
+                        
                     }
                     else {
                         let kizunaName = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.startIndex..<attribute.indexOf("(")!))))
                         self.translate(kizunaName, forKey: "kizunaName")
                         let kizunaCost = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("+")!, offsetBy: 1)..<attribute.index(attribute.indexOf("+")!, offsetBy: 2)))))
                         self.dict.updateValue(_: kizunaCost, forKey: "kizunaCost")
-                        let kizunaAbility = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")　")!, offsetBy: 2)..<attribute.endIndex))))
-                        self.translate(kizunaAbility, forKey: "kizunaAbility")
+                        let kizunaDesc = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")　")!, offsetBy: 2)..<attribute.endIndex))))
+                        self.translate(kizunaDesc, forKey: "kizunaDesc")
+                    }
+                
+                case 9:
+                    if numberOfAbilities == 1 {
+                        self.dict.updateValue(self.getTavern(attribute), forKey: "tavern")
+                    }
+                    else {
+                        if attribute.contains("精霊石") {
+                            let trailingString = attribute.substring(from: attribute.indexOf("Lv:")!)
+                            self.dict.updateValue(String(NSString(string: trailingString.substring(with: Range<String.Index>(trailingString.index(trailingString.indexOf("Lv:")!, offsetBy: 3)..<trailingString.index(before: trailingString.indexOf("/")!))))), forKey: "chainStone")
+                        }
                     }
                     
-                case 9:
+                case 10:
                     if numberOfAbilities == 0 || numberOfAbilities == 1{
                         break
                     }
@@ -680,7 +692,7 @@ class ArcanaDatabase: UIViewController {
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
         
-        let encodedString = "独裁王子イラリオン".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+        let encodedString = "“不変の勝利”騎士団トーマス".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
     
         // proceed to download
@@ -737,7 +749,7 @@ class ArcanaDatabase: UIViewController {
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
  
-            let encodedString = "荒野の孤狼ダスク".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+            let encodedString = urls[index].addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
             let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
         
             // first check if this exists in firebase
@@ -813,18 +825,16 @@ class ArcanaDatabase: UIViewController {
     func translate(_ value: String, forKey: String) {
         
         
-        
+//        print("translating \(value)")
         let encodedString = value.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         
         if let encodedString = encodedString {
             group.enter()
-            
             let url = URL(string: "https://www.googleapis.com/language/translate/v2?key=\(API_KEY)&q=\(encodedString)&source=ja&target=ko")
             
             let task = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
                 
                 if let data = data {
-                    
                     let json = JSON(data: data)
                     
                     if let translatedText = json["data"]["translations"][0]["translatedText"].string {
@@ -845,6 +855,9 @@ class ArcanaDatabase: UIViewController {
                         //self.dict.updateValue(String(htmlEncodedString: final), forKey: key)
                         self.group.leave()
                     }
+//                    else {
+//                        self.group.leave()
+//                    }
                     
                 }
             })
@@ -895,6 +908,12 @@ class ArcanaDatabase: UIViewController {
                 // Base Case: only 1 skill, 1 ability. Does not have nickname.
                 // TODO: Change base case to 1 skill 0 ability...
                 guard let nKR = self.dict["nameKR"], let nJP = self.dict["nameJP"], let r = self.dict["rarity"], let g = self.dict["group"], let t = self.dict["tavern"], let a = self.dict["affiliation"], let c = self.dict["cost"], let w = self.dict["weapon"], let kN = self.dict["kizunaName"], let kC = self.dict["kizunaCost"], let kD = self.dict["kizunaDesc"], let sC = self.dict["skillCount"], let sN1 = self.dict["skillName1"], let sM1 = self.dict["skillMana1"], let sD1 = self.dict["skillDesc1"], let aN1 = self.dict["abilityName1"], let aD1 = self.dict["abilityDesc1"] else {
+                    
+                    var check = [String]()
+                    for (key, _) in self.dict {
+                        check.append(key)
+                    }
+                    
                     
                     print("ARCANA DICIONARY VALUE IS NIL")
                     return
@@ -956,6 +975,7 @@ class ArcanaDatabase: UIViewController {
                         
                     else {
                         print("COULD NOT FIND ARCANA IN FILE. NO NICKNAME AND ICONURL")
+                        self.loop.leave()
                     }
                     self.loop.notify(queue: DispatchQueue.main, execute: { // Calls the given block when all blocks are finished in the group.
                         print("notified")
@@ -1125,7 +1145,7 @@ class ArcanaDatabase: UIViewController {
                     abilityRef.setValue(true)
                 }
             }
-            if let k = self.dict["kizunaAbility"] {
+            if let k = self.dict["kizunaDesc"] {
                 if k.contains("서브") && !k.contains("마나를") {
                     let kizunaRef = FIREBASE_REF.child("subKizuna/\(id)")
                     kizunaRef.setValue(true)
@@ -1248,7 +1268,7 @@ class ArcanaDatabase: UIViewController {
         case "夜明けの大海":
             return "새벽대해"
         case "ケ者の大陸":
-            return "개들의대륙"
+            return "수인의대륙"
         case "罪の大陸":
             return "죄의대륙"
         case "薄命の大陸":
@@ -1256,7 +1276,7 @@ class ArcanaDatabase: UIViewController {
         case "鉄煙の大陸":
             return "철연의대륙"
         case "年代記の大陸":
-            return "연대기의대륙"
+            return "연대기대륙"
         case "レムレス島":
             return "레무레스섬"
         case "魔神":
@@ -1295,7 +1315,7 @@ class ArcanaDatabase: UIViewController {
             return "seaBreeze"
         case "새벽대해":
             return "daybreakOcean"
-        case "개들의대륙":
+        case "수인의대륙":
             return "beast"
         case "죄의대륙":
             return "sin"
@@ -1303,7 +1323,7 @@ class ArcanaDatabase: UIViewController {
             return "ephemerality"
         case "철연의대륙":
             return "iron"
-        case "연대기의대륙":
+        case "연대기대륙":
             return "chronicle"
         case "서가":
             return "book"
@@ -1341,7 +1361,7 @@ class ArcanaDatabase: UIViewController {
         case "大海":
             return "대해"
         case "ケ者の大陸":
-            return "개들의대륙"
+            return "수인의대륙"
         case "罪の大陸":
             return "죄의대륙"
         case "薄命の大陸":
@@ -1349,7 +1369,7 @@ class ArcanaDatabase: UIViewController {
         case "鉄煙の大陸":
             return "철연의대륙"
         case "年代記の大陸":
-            return "연대기의대륙"
+            return "연대기대륙"
         case "レムレス島":
             return "레무레스섬"
         case "魔神":
