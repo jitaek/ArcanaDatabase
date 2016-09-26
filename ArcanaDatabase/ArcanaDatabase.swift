@@ -148,7 +148,7 @@ class ArcanaDatabase: UIViewController {
         if string == "new" {
             var tables = [String : String]()
             var skillCount = "1"
-            let usefulAttributes = ["名　前", "武器タイプ", "絆ステタイプ", "SKILL 1", "SKILL 2", "SKILL 3", "ABILITY", "絆の物語", "入手方法", "運命の物語", "CHAIN STORY"]
+            let usefulAttributes = ["名　前", "武器タイプ", "絆ステタイプ", "SKILL 1", "SKILL 2", "SKILL 3", "ABILITY", "絆の物語", "入手方法", "運命の物語", "出会いの物語", "絆の物語",  "CHAIN STORY"]
             if html.contains("SKILL 3") {
                 skillCount = "3"
             } else if html.contains("SKILL 2") {
@@ -374,7 +374,7 @@ class ArcanaDatabase: UIViewController {
                     }
                     
                     
-                case "運命の物語":
+                case "運命の物語", "出会いの物語", "絆の物語":
                     for link in parse!.xpath("//td") {
                         
                         let attribute = link.text!
@@ -456,7 +456,7 @@ class ArcanaDatabase: UIViewController {
             var usefulAttributes = [String]()
             var foundRarity = true
             for i in lines {
-                if i.contains("名　前") || i.contains("レアリティ") || i.contains("コ　ス　ト") || i.contains("コスト") || i.contains("職　業") || i.contains("職業") || i.contains("武器タイプ") || i.contains("ＳＫＩＬＬ") || i.contains("ＡＢＩＬＩＴＹ") || i.contains("絆アビリティ") || i.contains("運命の物語") || i.contains("入　手　方　法") {
+                if i.contains("名　前") || i.contains("レアリティ") || i.contains("コ　ス　ト") || i.contains("コスト") || i.contains("職　業") || i.contains("職業") || i.contains("武器タイプ") || i.contains("ＳＫＩＬＬ") || i.contains("ＡＢＩＬＩＴＹ") || i.contains("絆アビリティ") || i.contains("物語") || i.contains("入　手　方　法") {
                     usefulAttributes.append(i)
                     
                 }
@@ -544,7 +544,7 @@ class ArcanaDatabase: UIViewController {
                     let skillName1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.startIndex..<attribute.indexOf("(")!))))
                     self.translate(skillName1, forKey: "skillName1")
                     if let _ = attribute.indexOf(")*") {
-                        let skillMana1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")*")!, offsetBy: 2)..<attribute.index(attribute.indexOf(")*")!, offsetBy: 3)))))
+                        let skillMana1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("(")!, offsetBy: 1)..<attribute.index(attribute.indexOf("(")!, offsetBy: 2)))))
                         self.dict.updateValue(_: skillMana1, forKey: "skillMana1")
                         let skillDesc1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")*")!, offsetBy: 4)..<attribute.endIndex))))
                         self.translate(skillDesc1, forKey: "skillDesc1")
@@ -692,7 +692,7 @@ class ArcanaDatabase: UIViewController {
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
         
-        let encodedString = "“不変の勝利”騎士団トーマス".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+        let encodedString = "防衛委員長ミーム".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
     
         // proceed to download
