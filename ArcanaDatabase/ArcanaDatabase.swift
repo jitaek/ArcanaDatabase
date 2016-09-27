@@ -148,6 +148,7 @@ class ArcanaDatabase: UIViewController {
         if string == "new" {
             var tables = [String : String]()
             var skillCount = "1"
+            var foundChainStone = false
             let usefulAttributes = ["名　前", "武器タイプ", "絆ステタイプ", "SKILL 1", "SKILL 2", "SKILL 3", "ABILITY", "絆の物語", "入手方法", "運命の物語", "出会いの物語", "絆の物語",  "CHAIN STORY"]
             if html.contains("SKILL 3") {
                 skillCount = "3"
@@ -375,14 +376,29 @@ class ArcanaDatabase: UIViewController {
                     
                     
                 case "運命の物語", "出会いの物語", "絆の物語":
+                    
+                    if foundChainStone == true {
+                        break
+                    }
                     for link in parse!.xpath("//td") {
                         
                         let attribute = link.text!
+                        print(attribute)
                         if attribute.contains("精霊石") {
+                            foundChainStone = true
                             let trailingString = attribute.substring(from: attribute.indexOf("Lv:")!)
-                            self.dict.updateValue(String(NSString(string: trailingString.substring(with: Range<String.Index>(trailingString.index(trailingString.indexOf("Lv:")!, offsetBy: 3)..<trailingString.index(before: trailingString.indexOf("/")!))))), forKey: "chainStone")
-                            break
+                            // possibly more than one chainStone quest
+                            let chainStoneLevel = String(NSString(string: trailingString.substring(with: Range<String.Index>(trailingString.index(trailingString.indexOf("Lv:")!, offsetBy: 3)..<trailingString.index(trailingString.indexOf("/")!, offsetBy: 0)))))
+                            if let cS = self.dict["chainStone"] {
+                                self.dict.updateValue("\(cS), 레벨 \(chainStoneLevel)", forKey: "chainStone")
+                            }
+                            else {
+                                self.dict.updateValue("레벨 \(chainStoneLevel)", forKey: "chainStone")
+                            }
+                            
+                            
                         }
+                        
                         
                     }
                     
@@ -666,7 +682,7 @@ class ArcanaDatabase: UIViewController {
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
         
-        let encodedString = "防衛委員長ミーム".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+        let encodedString = "年代記の剣士リヴェラ".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
     
         // proceed to download
@@ -1011,14 +1027,14 @@ class ArcanaDatabase: UIViewController {
                                         
                                     default:
                                         
-
+                                        self.loop.leave()
                                         break
                                         
                                     }
                                     
                                     
                                 }
-                                self.loop.leave()
+//                                self.loop.leave()
                                 
                             })
                             
@@ -1513,8 +1529,8 @@ class ArcanaDatabase: UIViewController {
         super.viewDidLoad()
         retrieveURLS()
         //handleImage()
-//        downloadArcana()
-        downloadArcana(0)
+        downloadArcana()
+//        downloadArcana(50)
 //        for i in urls {
 //            print(i)
 //        }
