@@ -156,6 +156,7 @@ class ArcanaDatabase: UIViewController {
             self.dict.updateValue(skillCount, forKey: "skillCount")
             print("IDENTIFIED NEW PAGE")
             
+            // NEW PAGE-2 stars have an ability, unlike old page.
             // Kanna, search through html
             var oneSkill = true
             if html.contains("SKILL 2") {
@@ -170,25 +171,25 @@ class ArcanaDatabase: UIViewController {
                     for th in table.xpath(".//th") {
 //                        print("<<<<<<<\(th.text)")
                         for i in usefulAttributes {
-                            
                             let tableKey = th.text!
                             
                             // Some pages have SKILL VOICE.. check that it's not the voice..
 
-                            if tableKey.contains(i) && !th.innerHTML!.contains("使用時") {
+                            if tableKey.contains(i) && !tableKey.contains("使用時") {
                                 // check for "SKILL" and not 1,2,3
                                 if (tableKey.contains("SKILL") || tableKey.contains("SKILL 1")) && !tableKey.contains("SKILL 2") && !tableKey.contains("SKILL 3") {
                                     tables.updateValue(table.innerHTML!, forKey: "SKILL")
                                 }
                                 else {
                                     if i == ("SKILL")  {
-                                        break
                                     }
-                                    // check if 2nd ability
-                                    if i == "ABILITY" && tables["ABILITY"] != nil {
+                                    else if i == "ABILITY" && tables["ABILITY"] != nil {
                                         tables.updateValue(table.innerHTML!, forKey: "ABILITY2")
                                         
                                     }
+                                
+                                    // check if 2nd ability
+                                    
                                     else {
                                         print("\(i) IS \(th.innerHTML!)")
                                         tables.updateValue(table.innerHTML!, forKey: i)
@@ -276,8 +277,6 @@ class ArcanaDatabase: UIViewController {
                         
                     }
                 case "SKILL", "SKILL 1":
-                    print(key, value)
-                    print("ABOVE HERE")
                     for (index, link) in parse!.xpath("//td").enumerated() {
                         
                         let attribute = link.text!
@@ -694,7 +693,7 @@ class ArcanaDatabase: UIViewController {
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
         
-        let encodedString = "探し求めるものハク".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+        let encodedString = "白翼の熾典セラフィー".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
     
         // proceed to download
@@ -968,7 +967,7 @@ class ArcanaDatabase: UIViewController {
                         arcanaIDRef.updateChildValues(["chainStone" : "\(cStone)"])
                         
                     }
-                    if r.contains("3") || r.contains("4") || r.contains("5") {
+                    if !r.contains("1") {
                         if let aN1 = self.dict["abilityName1"], let aD1 = self.dict["abilityDesc1"] {
                             
                             let ability1 = ["abilityName1" : "\(aN1)", "abilityDesc1" : "\(aD1)"]
