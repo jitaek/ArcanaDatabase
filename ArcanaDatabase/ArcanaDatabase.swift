@@ -143,13 +143,11 @@ class ArcanaDatabase: UIViewController {
 
     // MARK: Given old or new page, parses the page.
     func downloadAttributes(_ string: String, html: String) {
-        
-
         if string == "new" {
             var tables = [String : String]()
             var skillCount = "1"
             var foundChainStone = false
-            let usefulAttributes = ["名　前", "武器タイプ", "絆ステタイプ", "SKILL 1", "SKILL 2", "SKILL 3", "ABILITY", "絆の物語", "入手方法", "運命の物語", "出会いの物語", "絆の物語",  "CHAIN STORY"]
+            let usefulAttributes = ["名　前", "武器タイプ", "絆ステタイプ", "SKILL", "SKILL 2", "SKILL 3", "ABILITY", "絆の物語", "入手方法", "運命の物語", "出会いの物語", "絆の物語",  "CHAIN STORY"]
             if html.contains("SKILL 3") {
                 skillCount = "3"
             } else if html.contains("SKILL 2") {
@@ -160,10 +158,9 @@ class ArcanaDatabase: UIViewController {
             
             // Kanna, search through html
             var oneSkill = true
-            if html.contains("SKILL 1") {
+            if html.contains("SKILL 2") {
                 oneSkill = false
             }
-            
             if let doc = Kanna.HTML(html: html, encoding: String.Encoding.utf8) {
                 
                 // Now getting tables.
@@ -171,27 +168,41 @@ class ArcanaDatabase: UIViewController {
                     // getting the innerhtml of tables. do i need to do this?
                     // for each table, iterate through the <th>
                     for th in table.xpath(".//th") {
-                        
+//                        print("<<<<<<<\(th.text)")
                         for i in usefulAttributes {
                             
-                            if th.text!.contains(i) {
-                                
-                                // check if 2nd ability
-                                if i == "ABILITY" && tables["ABILITY"] != nil {
-                                    tables.updateValue(table.innerHTML!, forKey: "ABILITY2")
-                                    
+                            let tableKey = th.text!
+                            
+                            // Some pages have SKILL VOICE.. check that it's not the voice..
+
+                            if tableKey.contains(i) && !th.innerHTML!.contains("使用時") {
+                                // check for "SKILL" and not 1,2,3
+                                if (tableKey.contains("SKILL") || tableKey.contains("SKILL 1")) && !tableKey.contains("SKILL 2") && !tableKey.contains("SKILL 3") {
+                                    tables.updateValue(table.innerHTML!, forKey: "SKILL")
                                 }
                                 else {
+                                    if i == ("SKILL")  {
+                                        break
+                                    }
+                                    // check if 2nd ability
+                                    if i == "ABILITY" && tables["ABILITY"] != nil {
+                                        tables.updateValue(table.innerHTML!, forKey: "ABILITY2")
+                                        
+                                    }
+                                    else {
+                                        print("\(i) IS \(th.innerHTML!)")
+                                        tables.updateValue(table.innerHTML!, forKey: i)
+                                    }
                                     
-                                    tables.updateValue(table.innerHTML!, forKey: i)
+                                    
                                 }
+                                
                                 
                             }
                         }
-                        if oneSkill == true {
-                            if th.text!.contains("SKILL") {
-                                tables.updateValue(table.innerHTML!, forKey: "SKILL")
-                            }
+                        if th.text!.contains("SKILL") && oneSkill == true && !th.innerHTML!.contains("使用時") {
+                            tables.updateValue(table.innerHTML!, forKey: "SKILL")
+                            
                         }
                         
                     }
@@ -265,7 +276,8 @@ class ArcanaDatabase: UIViewController {
                         
                     }
                 case "SKILL", "SKILL 1":
-                    
+                    print(key, value)
+                    print("ABOVE HERE")
                     for (index, link) in parse!.xpath("//td").enumerated() {
                         
                         let attribute = link.text!
@@ -678,11 +690,11 @@ class ArcanaDatabase: UIViewController {
     
     // Download one arcana
     func downloadArcana() {
-        
+        dict.removeAll()
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
         
-        let encodedString = "年代記の剣士リヴェラ".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+        let encodedString = "探し求めるものハク".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
     
         // proceed to download
@@ -815,6 +827,7 @@ class ArcanaDatabase: UIViewController {
     }
     
     func translate(_ value: String, forKey: String) {
+        
         
         
 //        print("translating \(value)")
@@ -1244,7 +1257,7 @@ class ArcanaDatabase: UIViewController {
     
     func getTavern(_ string: String) -> String {
         
-        let taverns = ["副都", "聖都", "賢者の塔", "迷宮山脈", "湖都", "精霊島", "炎の九領", "海風の港", "夜明けの大海", "ケ者の大陸", "罪の大陸", "薄命の大陸", "鉄煙の大陸", "書架", "レムレス島", "魔神", "ガチャ", "グ交換"]
+        let taverns = ["副都", "聖都", "賢者の塔", "迷宮山脈", "湖都", "精霊島", "炎の九領", "海風の港", "夜明けの大海", "ケ者の大陸", "罪の大陸", "薄命の大陸", "鉄煙の大陸", "年代記", "書架", "レムレス島", "魔神", "ガチャ", "グ交換"]
         var tav = ""
     
         for (index, t) in taverns.enumerated() {
@@ -1282,7 +1295,7 @@ class ArcanaDatabase: UIViewController {
             return "박명의대륙"
         case "鉄煙の大陸":
             return "철연의대륙"
-        case "年代記の大陸":
+        case "年代記":
             return "연대기대륙"
         case "レムレス島":
             return "레무레스섬"
