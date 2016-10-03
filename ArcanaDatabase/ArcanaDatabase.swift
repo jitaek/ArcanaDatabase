@@ -488,6 +488,11 @@ class ArcanaDatabase: UIViewController {
             for i in lines {
                 for j in usefulKeys {
                     if i.contains(j) {
+                        if j == "職　業" || j == "職業" {
+                            if !i.contains("ＡＢＩＬＩＴＹ") {
+                                usefulAttributes.updateValue(i, forKey: j)
+                            }
+                        } else
                         // 'cost' appears in kizuna, so make sure it doesn't overlap
                         if j == "コ　ス　ト" || j == "コスト" {
                             if !i.contains("絆アビリティ") {
@@ -562,8 +567,9 @@ class ArcanaDatabase: UIViewController {
                 case "コ　ス　ト", "コスト":
                     self.dict.updateValue(attribute, forKey: "cost")
                     
-                case "職　業", "職業":
+                case "職　業", "職業":   // TODO: class is sometimes found in ability mana description, make sure this doesn't happen
                     // Get group inside ()
+                    print("GROUP IS \(attribute)")
                     var group = String()
                     if let _ = attribute.indexOf("(") {
                         group = NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("(")!, offsetBy: 1)..<attribute.indexOf(")")!))) as String
@@ -693,7 +699,7 @@ class ArcanaDatabase: UIViewController {
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
         
-        let encodedString = "白翼の熾典セラフィー".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+        let encodedString = "万象の魔導師アルドラ".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
     
         // proceed to download
@@ -1003,7 +1009,6 @@ class ArcanaDatabase: UIViewController {
                         
                         // Check if arcana has 2 abilities
                         if r.contains("5") || r.contains("4") {
-                            print("RARITY IS 4 or 5")
                             guard let aN2 = self.dict["abilityName2"], let aD2 = self.dict["abilityDesc2"] else {
                                 print("ABILITY 2 NOT FOUND<<<")
                                 return
@@ -1046,7 +1051,7 @@ class ArcanaDatabase: UIViewController {
                                     
                                     
                                 }
-//                                self.loop.leave()
+                                self.loop.leave()
                                 
                             })
                             
@@ -1542,7 +1547,7 @@ class ArcanaDatabase: UIViewController {
         retrieveURLS()
         //handleImage()
         downloadArcana()
-//        downloadArcana(50)
+//        downloadArcana(0)
 //        for i in urls {
 //            print(i)
 //        }
