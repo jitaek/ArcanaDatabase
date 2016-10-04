@@ -540,8 +540,18 @@ class ArcanaDatabase: UIViewController {
                 let range = NSMakeRange(0, spanLessString.characters.count)
                 
                 let htmlLessString :String = regex.stringByReplacingMatches(in: spanLessString, options: [], range:range, withTemplate: "")
+                let removeStars = try! NSRegularExpression(pattern: "\\*.", options: [.caseInsensitive])
+                let removeStarsRange = NSMakeRange(0, htmlLessString.characters.count)
+                let removeStarsString = removeStars.stringByReplacingMatches(in: htmlLessString, options: [], range: removeStarsRange, withTemplate: "")
                 
-                let attribute = htmlLessString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                var attribute = removeStarsString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                
+                let badCharacters = ["（" : "(", "）": ")", "：" : "　"]
+                
+                for (key, value) in badCharacters {
+                    attribute = attribute.replacingOccurrences(of: key, with: value)
+                }
+                
                 //print(index, attribute)
                 
                 print(key, value)
@@ -588,50 +598,30 @@ class ArcanaDatabase: UIViewController {
                     
                 case "ＳＫＩＬＬ":
                     // Two different types of brackets
-                    
                     // japanese bracket
                     if let _ = attribute.indexOf("（") {
-                        
+                        print("SHOULD NOT BEH HERE")
                         let skillName1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.startIndex..<attribute.indexOf("（")!))))
                         self.translate(skillName1, forKey: "skillName1")
                         
-                        if let _ = attribute.indexOf(")*") {
-                            let skillMana1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("(")!, offsetBy: 1)..<attribute.index(attribute.indexOf("(")!, offsetBy: 2)))))
-                            self.dict.updateValue(_: skillMana1, forKey: "skillMana1")
-                            let skillDesc1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")*")!, offsetBy: 3)..<attribute.endIndex))))
-                            self.translate(skillDesc1, forKey: "skillDesc1")
-                        }
-                            
-                        else {
-                            let skillMana1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("(")!, offsetBy: 1)..<attribute.index(attribute.indexOf("(")!, offsetBy: 2)))))
-                            self.dict.updateValue(_: skillMana1, forKey: "skillMana1")
-                            let skillDesc1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("(")!, offsetBy: 2)..<attribute.endIndex))))
-                            self.translate(skillDesc1, forKey: "skillDesc1")
-                        }
+                        let skillMana1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("(")!, offsetBy: 1)..<attribute.index(attribute.indexOf("(")!, offsetBy: 2)))))
+                        self.dict.updateValue(_: skillMana1, forKey: "skillMana1")
+                        let skillDesc1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("(")!, offsetBy: 2)..<attribute.endIndex))))
+                        self.translate(skillDesc1, forKey: "skillDesc1")
 
-                        
                     }
                     
                         // normal bracket
                     else {
+                        
                         let skillName1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.startIndex..<attribute.indexOf("(")!))))
                         self.translate(skillName1, forKey: "skillName1")
-                        if let _ = attribute.indexOf(")*") {
-                            let skillMana1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("(")!, offsetBy: 1)..<attribute.index(attribute.indexOf("(")!, offsetBy: 2)))))
-                            self.dict.updateValue(_: skillMana1, forKey: "skillMana1")
-                            let skillDesc1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")*")!, offsetBy: 3)..<attribute.endIndex))))
-                            self.translate(skillDesc1, forKey: "skillDesc1")
-                        }
 
-                        else {
-                            let skillMana1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("(")!, offsetBy: 1)..<attribute.index(attribute.indexOf("(")!, offsetBy: 2)))))
-                            self.dict.updateValue(_: skillMana1, forKey: "skillMana1")
-                            let skillDesc1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("(")!, offsetBy: 2)..<attribute.endIndex))))
-                            self.translate(skillDesc1, forKey: "skillDesc1")
-                        }
+                        let skillMana1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("(")!, offsetBy: 1)..<attribute.index(attribute.indexOf("(")!, offsetBy: 2)))))
+                        self.dict.updateValue(_: skillMana1, forKey: "skillMana1")
+                        let skillDesc1 = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")")!, offsetBy: 2)..<attribute.endIndex))))
+                        self.translate(skillDesc1, forKey: "skillDesc1")
 
-                    
-                    
                     
                     }
                     
@@ -749,7 +739,7 @@ class ArcanaDatabase: UIViewController {
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
         
-        let encodedString = "魔法兵団師団長ヴェルナー".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+        let encodedString = "破壊魔人ロレッタ".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
     
         // proceed to download
@@ -1597,7 +1587,7 @@ class ArcanaDatabase: UIViewController {
         retrieveURLS()
         //handleImage()
         downloadArcana()
-//        downloadArcana(73)
+//        downloadArcana(0)
 //        for i in urls {
 //            print(i)
 //        }
