@@ -1502,31 +1502,31 @@ class ArcanaDatabase: UIViewController {
     }
     
     func getAffiliation(_ string: String) -> String {
-        
+        // two types, second is for old arcana in text file
         switch string {
         case "副都":
             return "부도"
         case "聖都":
             return "성도"
-        case "賢者の塔":
+        case "賢者の塔", "賢者":
             return "현자의탑"
-        case "迷宮山脈":
+        case "迷宮山脈", "迷宮":
             return "미궁산맥"
         case "湖都":
             return "호수도시"
-        case "精霊島":
+        case "精霊島", "海風":
             return "정령섬"
         case "九領":
             return "화염구령"
         case "大海":
             return "대해"
-        case "ケ者の大陸":
+        case "ケ者の大陸", "ケ者":
             return "수인의대륙"
-        case "罪の大陸":
+        case "罪の大陸", "罪":
             return "죄의대륙"
-        case "薄命の大陸":
+        case "薄命の大陸", "薄命":
             return "박명의대륙"
-        case "鉄煙の大陸":
+        case "鉄煙の大陸", "鉄煙":
             return "철연의대륙"
         case "年代記の大陸":
             return "연대기대륙"
@@ -1678,23 +1678,29 @@ class ArcanaDatabase: UIViewController {
             print(error)
         }
     }
+    
+    func prepareImage() {
+        self.loop.enter()
+        let ref = FIREBASE_REF.child("arcana")
+        ref.observeSingleEvent(of: .value, with: { snapshot in
+            for i in snapshot.children {
+                let arcana = Arcana(snapshot: i as! FIRDataSnapshot)
+                self.arcanaArray.append(arcana!)
+            }
+            self.loop.leave()
+        })
+        self.download.notify(queue: DispatchQueue.main, execute: {
+            print("FINISHED DOWNLOADING ARCANA")
+            self.handleImage(0)
+        })
+
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         retrieveURLS()
-//        self.loop.enter()
-//        let ref = FIREBASE_REF.child("arcana")
-//        ref.observeSingleEvent(of: .value, with: { snapshot in
-//            for i in snapshot.children {
-//                let arcana = Arcana(snapshot: i as! FIRDataSnapshot)
-//                self.arcanaArray.append(arcana!)
-//            }
-//            self.loop.leave()
-//        })
-//        self.download.notify(queue: DispatchQueue.main, execute: {
-//            print("FINISHED DOWNLOADING ARCANA")
-//            self.handleImage(0)
-//        })
-        handleImage(uid: "-KTD-6A4Od8klP7gbMV5")
+        prepareImage()
+//        handleImage(uid: "-KTD-6A4Od8klP7gbMV5")
 //        downloadArcana()
 //        downloadArcana(142)
 //        for i in urls {
