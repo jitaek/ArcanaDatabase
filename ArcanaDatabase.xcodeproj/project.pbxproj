@@ -16,6 +16,7 @@
 		044AB02A1D8DFDC600B6678F /* ArcanaDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044AB0271D8DFDC600B6678F /* ArcanaDatabase.swift */; };
 		044AB02B1D8DFDC600B6678F /* GlobalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044AB0281D8DFDC600B6678F /* GlobalConstants.swift */; };
 		044C25221D8FBC410045F4DD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 044C25211D8FBC410045F4DD /* GoogleService-Info.plist */; };
+		04F3CD8B1DA38D2C0026D5AF /* Arcana.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F3CD8A1DA38D2C0026D5AF /* Arcana.swift */; };
 		2D32BB44290516072E6B516B /* Pods_ArcanaDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E09681E1836C3DB035C4AE7 /* Pods_ArcanaDatabase.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +33,7 @@
 		044AB0281D8DFDC600B6678F /* GlobalConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalConstants.swift; sourceTree = "<group>"; };
 		044C25211D8FBC410045F4DD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0499C9C41D90894E00552175 /* ArcanaDatabase.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ArcanaDatabase.entitlements; sourceTree = "<group>"; };
+		04F3CD8A1DA38D2C0026D5AF /* Arcana.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arcana.swift; sourceTree = "<group>"; };
 		0EB4105AF6E80ACF6446C865 /* Pods-ArcanaDatabase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArcanaDatabase.release.xcconfig"; path = "Pods/Target Support Files/Pods-ArcanaDatabase/Pods-ArcanaDatabase.release.xcconfig"; sourceTree = "<group>"; };
 		1E09681E1836C3DB035C4AE7 /* Pods_ArcanaDatabase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ArcanaDatabase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		30413E90C0939B58766D250D /* Pods-ArcanaDatabase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArcanaDatabase.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ArcanaDatabase/Pods-ArcanaDatabase.debug.xcconfig"; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 				044AB0141D8DFD6400B6678F /* AppDelegate.swift */,
 				044AB0161D8DFD6400B6678F /* ViewController.swift */,
 				044AB0181D8DFD6400B6678F /* Main.storyboard */,
+				04F3CD8A1DA38D2C0026D5AF /* Arcana.swift */,
 				044AB01B1D8DFD6400B6678F /* Assets.xcassets */,
 				044AB01D1D8DFD6400B6678F /* LaunchScreen.storyboard */,
 				044AB0201D8DFD6400B6678F /* Info.plist */,
@@ -238,6 +241,7 @@
 				044AB0151D8DFD6400B6678F /* AppDelegate.swift in Sources */,
 				044AB02B1D8DFDC600B6678F /* GlobalConstants.swift in Sources */,
 				044AB02A1D8DFDC600B6678F /* ArcanaDatabase.swift in Sources */,
+				04F3CD8B1DA38D2C0026D5AF /* Arcana.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
