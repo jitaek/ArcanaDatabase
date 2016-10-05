@@ -741,28 +741,20 @@ class ArcanaDatabase: UIViewController {
                 case "絆アビリティ":
                     if foundKizuna {
                         // pages have two types of brackets
-                        if let _ = attribute.indexOf("（") {
-                            let kizunaName = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.startIndex..<attribute.indexOf("（")!))))
-                            self.translate(kizunaName, forKey: "kizunaName")
-                            let kizunaCost = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("+")!, offsetBy: 1)..<attribute.index(attribute.indexOf("+")!, offsetBy: 2)))))
-                            self.dict.updateValue(_: kizunaCost, forKey: "kizunaCost")
-                            if let _ = attribute.indexOf("）　") {
-                                let kizunaDesc = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("）　")!, offsetBy: 2)..<attribute.endIndex))))
-                                self.translate(kizunaDesc, forKey: "kizunaDesc")
-                            }
-                            else {
-                                let kizunaDesc = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")　")!, offsetBy: 2)..<attribute.endIndex))))
-                                self.translate(kizunaDesc, forKey: "kizunaDesc")
-                            }
-                            
-                        }
-                        else {
+                        if let _ = attribute.indexOf("("), let _ = attribute.indexOf("+") {
                             let kizunaName = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.startIndex..<attribute.indexOf("(")!))))
                             self.translate(kizunaName, forKey: "kizunaName")
                             let kizunaCost = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf("+")!, offsetBy: 1)..<attribute.index(attribute.indexOf("+")!, offsetBy: 2)))))
                             self.dict.updateValue(_: kizunaCost, forKey: "kizunaCost")
                             let kizunaDesc = String(NSString(string: attribute.substring(with: Range<String.Index>(attribute.index(attribute.indexOf(")　")!, offsetBy: 2)..<attribute.endIndex))))
                             self.translate(kizunaDesc, forKey: "kizunaDesc")
+
+                            
+                        }
+                        else {
+                            self.dict.updateValue("정보 없음", forKey: "kizunaName")
+                            self.dict.updateValue("-", forKey: "kizunaCost")
+                            self.dict.updateValue("정보 없음", forKey: "kizunaDesc")
                         }
                         
                     }
@@ -1699,10 +1691,10 @@ class ArcanaDatabase: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         retrieveURLS()
-        prepareImage()
+//        prepareImage()
 //        handleImage(uid: "-KTD-6A4Od8klP7gbMV5")
 //        downloadArcana()
-//        downloadArcana(142)
+        downloadArcana(240)
 //        for i in urls {
 //            print(i)
 //        }
