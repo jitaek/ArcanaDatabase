@@ -507,7 +507,6 @@ class ArcanaDatabase: UIViewController {
                     
                 case "CHAIN STORY":
                     for link in parse!.xpath("//td") {
-                        print("CHAINIENFIOWNEF")
                         let attribute = link.text!
                         if attribute.contains("章") && attribute.contains("】") {
                             self.translate(attribute, forKey: "chainStory")
@@ -1147,41 +1146,41 @@ class ArcanaDatabase: UIViewController {
                             self.loop.enter()
                             // Upload Ability 2
                             newArcanaRef.updateChildValues(abilityRef, withCompletionBlock: { completion in
-                                
-                                // Check if arcana has at least 2 skills
-                                if let sN2 = self.dict["skillName2"], let sM2 = self.dict["skillMana2"], let sD2 = self.dict["skillDesc2"] {
-                                    
-                                    switch (sC) {
-                                    case "2":
-                                        
-                                        let skill2 = ["skillName2" : "\(sN2)", "skillMana2" : "\(sM2)", "skillDesc2" : "\(sD2)"]
-                                        newArcanaRef.updateChildValues(skill2, withCompletionBlock: { completion in
-                                            self.loop.leave()
-
-                                        })
-                                        
-                                    case "3":
-                                        
-                                        if let sN2 = self.dict["skillName2"], let sM2 = self.dict["skillMana2"], let sD2 = self.dict["skillDesc2"], let sN3 = self.dict["skillName3"], let sM3 = self.dict["skillMana3"], let sD3 = self.dict["skillDesc3"] {
-                                            let skill3 = ["skillName2" : "\(sN2)", "skillMana2" : "\(sM2)", "skillDesc2" : "\(sD2)", "skillName3" : "\(sN3)", "skillMana3" : "\(sM3)", "skillDesc3" : "\(sD3)"]
-                                            newArcanaRef.updateChildValues(skill3, withCompletionBlock: { completion in
-                                                self.loop.leave()
-
-                                            })
-                                        }
-                                        
-                                    default:
-                                        
-                                        self.loop.leave()
-                                        break
-                                        
-                                    }
-                                    
-                                    
-                                }
                                 self.loop.leave()
                                 
                             })
+                            
+                            // Check if arcana has at least 2 skills
+                            if let sN2 = self.dict["skillName2"], let sM2 = self.dict["skillMana2"], let sD2 = self.dict["skillDesc2"] {
+                                self.loop.enter()
+                                switch (sC) {
+                                case "2":
+                                    
+                                    let skill2 = ["skillName2" : "\(sN2)", "skillMana2" : "\(sM2)", "skillDesc2" : "\(sD2)"]
+                                    newArcanaRef.updateChildValues(skill2, withCompletionBlock: { completion in
+                                        self.loop.leave()
+                                        
+                                    })
+                                    
+                                case "3":
+                                    
+                                    if let sN2 = self.dict["skillName2"], let sM2 = self.dict["skillMana2"], let sD2 = self.dict["skillDesc2"], let sN3 = self.dict["skillName3"], let sM3 = self.dict["skillMana3"], let sD3 = self.dict["skillDesc3"] {
+                                        let skill3 = ["skillName2" : "\(sN2)", "skillMana2" : "\(sM2)", "skillDesc2" : "\(sD2)", "skillName3" : "\(sN3)", "skillMana3" : "\(sM3)", "skillDesc3" : "\(sD3)"]
+                                        newArcanaRef.updateChildValues(skill3, withCompletionBlock: { completion in
+                                            self.loop.leave()
+                                            
+                                        })
+                                    }
+                                    
+                                default:
+                                    
+                                    self.loop.leave()
+                                    break
+                                    
+                                }
+                                
+                                
+                            }
                             
                         }
                         // rarity 1,2,3. only has 1 ability
@@ -1573,19 +1572,17 @@ class ArcanaDatabase: UIViewController {
         print("SEARCHING FOR \(string)")
         
         let path = Bundle.main.path(forResource: ".//arcanaData", ofType: "txt")
-        let file = try? NSString(contentsOfFile: path! as String, encoding: String.Encoding.utf8.rawValue)
         let data: Data? = try? Data(contentsOf: URL(fileURLWithPath: path!))
         //print(data)
         do {
             let jsonObject : Any! =  try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers)
             let json = JSON(jsonObject)
-            let a = string.substring(to: string.characters.index(string.startIndex, offsetBy: 3))
             var contains = false
             
             for (_, subJson) : (String, JSON) in json["array"] {
                 
                 // Checking for nickname because of ver 2.
-                if string.contains(subJson["nickname"].stringValue) {
+                if string.contains(subJson["nickname"].stringValue) || string.contains(subJson["name"].stringValue) {
                     // check if we need all attributes(Oldest) or some
 //                    if type == "oldest" {
 //                        let rarity = subJson["rank"].stringValue
@@ -1687,32 +1684,7 @@ class ArcanaDatabase: UIViewController {
         })
 
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        retrieveURLS()
-//        prepareImage()
-//        handleImage(uid: "-KTD-6A4Od8klP7gbMV5")
-//        downloadArcana()
-        downloadArcana(240)
-//        for i in urls {
-//            print(i)
-//        }
-        //let json = JSON(data: )
-        //handleImage()
-        //downloadTavern()
-        // Do any additional setup after loading the view.
-    }
 
-    override func viewDidAppear(_ animated: Bool) {
-        
-//        for (index, u) in urls.enumerate() {
-//            print(index, u)
-//            
-//        }
-        
-        
-    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -1728,6 +1700,21 @@ class ArcanaDatabase: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        retrieveURLS()
+        //        prepareImage()
+        //        handleImage(uid: "-KTD-6A4Od8klP7gbMV5")
+        //        downloadArcana()
+        downloadArcana(430)
+        //        for i in urls {
+        //            print(i)
+        //        }
+        //let json = JSON(data: )
+        //handleImage()
+        //downloadTavern()
+        // Do any additional setup after loading the view.
+    }
 
 }
 
