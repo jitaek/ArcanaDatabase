@@ -1706,7 +1706,7 @@ class ArcanaDatabase: UIViewController {
         //        prepareImage()
         //        handleImage(uid: "-KTD-6A4Od8klP7gbMV5")
         //        downloadArcana()
-        downloadArcana(430)
+        downloadArcana(549)
         //        for i in urls {
         //            print(i)
         //        }
