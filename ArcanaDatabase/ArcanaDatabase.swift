@@ -983,6 +983,9 @@ class ArcanaDatabase: UIViewController {
                         // remove space in front of %
                         t = t.replacingOccurrences(of: " %", with: "%")
                         t = t.replacingOccurrences(of: "副都", with: "부도")
+                        if forKey == "nameKR" {
+                            t = t.replacingOccurrences(of: " ", with: "")
+                        }
                         print("TRANSLATED TEXT IS \(t)")
                         
                         self.dict.updateValue(t, forKey: forKey)
