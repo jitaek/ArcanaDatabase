@@ -315,10 +315,10 @@ class ArcanaDatabase: UIViewController {
                         
                         switch index {
                         case 0:
-                            if self.getAttributes(attribute, foundRarity: true) == false {
+//                            if self.getAttributes(attribute, foundRarity: true) == false {
                                 self.dict.updateValue(attribute, forKey: "nameJP")
                                 self.translate(attribute, forKey: "nameKR")
-                            }
+//                            }
                             
                         case 1:
                             self.dict.updateValue(self.getRarity(attribute), forKey: "rarity")
@@ -821,7 +821,7 @@ class ArcanaDatabase: UIViewController {
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
         
-        let encodedString = "伝説の歌姫ムジカ".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+        let encodedString = "白翼の熾典セラフィー".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
     
         // proceed to download
@@ -983,9 +983,9 @@ class ArcanaDatabase: UIViewController {
                         // remove space in front of %
                         t = t.replacingOccurrences(of: " %", with: "%")
                         t = t.replacingOccurrences(of: "副都", with: "부도")
-                        if forKey == "nameKR" {
-                            t = t.replacingOccurrences(of: " ", with: "")
-                        }
+//                        if forKey == "nameKR" {
+//                            t = t.replacingOccurrences(of: " ", with: "")
+//                        }
                         print("TRANSLATED TEXT IS \(t)")
                         
                         self.dict.updateValue(t, forKey: forKey)
@@ -1694,29 +1694,14 @@ class ArcanaDatabase: UIViewController {
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     override func viewDidLoad() {
         super.viewDidLoad()
-        retrieveURLS()
-        //        prepareImage()
-        //        handleImage(uid: "-KTD-6A4Od8klP7gbMV5")
-        //        downloadArcana()
-        downloadArcana(549)
-        //        for i in urls {
-        //            print(i)
-        //        }
-        //let json = JSON(data: )
-        //handleImage()
-        //downloadTavern()
-        // Do any additional setup after loading the view.
+//        retrieveURLS()
+//        prepareImage()
+//        handleImage(uid: "-KTD-6A4Od8klP7gbMV5")
+        downloadArcana()
+//        downloadArcana(549)
+
     }
 
 }
