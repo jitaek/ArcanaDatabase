@@ -14,8 +14,10 @@ import Firebase
 import Foundation
 
 
-class ArcanaDatabase: UIViewController {
+class ArcanaDatabase: UIViewController, UITextFieldDelegate {
 
+    @IBOutlet weak var nameField: UITextField!
+    @IBOutlet weak var iconField: UITextField!
     // let google = "https://www.google.com/searchbyimage?&image_url="
     // let imageURL = "https://cdn.img-conv.gamerch.com/img.gamerch.com/xn--eckfza0gxcvmna6c/149117/20141218143001Q53NTilN.jpg"
     let baseURL = "https://xn--eckfza0gxcvmna6c.gamerch.com/"
@@ -30,6 +32,61 @@ class ArcanaDatabase: UIViewController {
     var dict = [String : String]()
     var arcanaID: Int?
     var arcanaArray = [Arcana]()
+    
+    
+    @IBAction func downloadIcon(_ sender: AnyObject) {
+        var images = [String : String]()
+        let ref = FIREBASE_REF.child("arcana")
+        ref.queryLimited(toLast: 50).observeSingleEvent(of: .value, with: { snapshot in
+            for i in snapshot.children.reversed() {
+                let arcana = Arcana(snapshot: i as! FIRDataSnapshot)
+                let uid = arcana!.uid
+                if arcana!.nameJP.contains(self.nameField.text!) {
+                    print("FOUND ARCANA NAME")
+                    images.updateValue(arcana!.imageURL!, forKey: "main")
+                    images.updateValue(self.iconField.text!, forKey: "icon")
+                    let iconRef = FIREBASE_REF.child("arcana/\(arcana!.uid)/iconURL")
+                    iconRef.setValue(self.iconField.text!)
+                    
+                    for (image, url) in images {
+                        let url = URL(string: url)
+                        let task = URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
+                            if error != nil {
+                                print("DOWNLOAD \(image) ERROR")
+                            }
+                            
+                            if let data = data {
+                                print("DOWNLOADED \(image) FOR \(self.nameField.text!)!")
+                                // upload to firebase storage.
+                                
+                                let arcanaImageRef = STORAGE_REF.child("image/arcana/\(uid)/\(image).jpg")
+                                
+                                arcanaImageRef.put(NSData(data: data) as Data, metadata: nil) { metadata, error in
+                                    if (error != nil) {
+                                        print("ERROR OCCURED WHILE UPLOADING \(image))")
+                                        // Uh-oh, an error occurred!
+                                    } else {
+                                        // Metadata contains file metadata such as size, content-type, and download URL.
+                                        print("UPLOADED \(image) FOR \(arcana!.nameKR)")
+                                        
+                                        //let downloadURL = metadata!.downloadURL
+                                    }
+                                }
+                                
+                            }
+                            
+                        })
+                        task.resume()
+                    }
+                    
+                    
+                }
+                    
+            }
+            
+        })
+        
+    }
     
     func handleImage(uid: String) {
         let ref = FIREBASE_REF.child("arcana/\(uid)")
@@ -207,7 +264,7 @@ class ArcanaDatabase: UIViewController {
                     
                     let tables = Kanna.HTML(html: link.innerHTML!, encoding: String.Encoding.utf8)
                     
-                    guard let linkText = link.text else {
+                    guard let _ = link.text else {
                         return
                     }
                     if index == 0 {
@@ -656,11 +713,11 @@ class ArcanaDatabase: UIViewController {
                 switch key {
                    
                 case "名　前":
-                    if self.getAttributes(attribute, foundRarity: foundRarity) == false {
+//                    if self.getAttributes(attribute, foundRarity: foundRarity) == false {
                         //TODO: Update names.
                         self.dict.updateValue(attribute, forKey: "nameJP")
                         self.translate(attribute, forKey: "nameKR")
-                    }
+//                    }
                     
                 case "レアリティ":
                     
@@ -814,14 +871,70 @@ class ArcanaDatabase: UIViewController {
         
         
     }
-    
+    // Download inputted arcana
+    func downloadArcana(name: String) {
+        dict.removeAll()
+        download.enter()
+        // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
+        
+        let encodedString = name.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+        let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
+        
+        // proceed to download
+        
+        print("PARSING...")
+        print(encodedURL!)
+        
+        
+        do {
+            let html = try String(contentsOf: encodedURL!, encoding: String.Encoding.utf8)
+            
+            
+            // TODO: THERE ARE ACTUALLY 3 TYPES OF PAGES.
+            // IF IT IS THE OLDEST, IT WONT HAVE <HR>. SO INSTEAD OF PARSING LIKE AN OLD PAGE, SEARCH ARCANADATA FOR BASIC ATTRIBUTES, THEN ONLY GET SKILL/ABILITIES FROM HTML.
+            
+            
+            if html.contains("#ui_wikidb") {
+                //                self.downloadAttributes("new", html: html)
+                self.downloadAttributes("new", html: html)
+                self.downloadImage("new", url: encodedURL!)
+                
+            }
+                
+            else {
+                self.downloadAttributes("old", html: html)
+                self.downloadImage("old", url: encodedURL!)
+                
+            }
+            
+            
+        }
+            
+        catch {
+            print(error)
+        }
+        
+        
+        self.download.notify(queue: DispatchQueue.main, execute: {
+            print("Finished translating.")
+            
+            self.loop.notify(queue: DispatchQueue.main, execute: {
+                print("Finished uploading.")
+                self.downloadIcon(_: self)
+                
+            })
+        })
+        
+        
+        
+    }
     // Download one arcana
     func downloadArcana() {
         dict.removeAll()
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
         
-        let encodedString = "白翼の熾典セラフィー".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+        let encodedString = "最愛の友ミョルン".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
     
         // proceed to download
@@ -1044,6 +1157,9 @@ class ArcanaDatabase: UIViewController {
                 
                 // Base Case: only 1 skill, 1 ability. Does not have nickname.
                 var check = [String]()
+                if self.dict["affiliation"] == nil {
+                    self.dict["affiliation"] = ""
+                }
                 // TODO: Change base case to 1 skill 0 ability...
                 guard let nKR = self.dict["nameKR"], let nJP = self.dict["nameJP"], let r = self.dict["rarity"], let g = self.dict["group"], let t = self.dict["tavern"], let a = self.dict["affiliation"], let c = self.dict["cost"], let w = self.dict["weapon"], let kN = self.dict["kizunaName"], let kC = self.dict["kizunaCost"], let kD = self.dict["kizunaDesc"], let sC = self.dict["skillCount"], let sN1 = self.dict["skillName1"], let sM1 = self.dict["skillMana1"], let sD1 = self.dict["skillDesc1"] else {
                     
@@ -1088,7 +1204,7 @@ class ArcanaDatabase: UIViewController {
                 self.findAbilities()
                 
                 ref.updateChildValues(arcanaRef, withCompletionBlock: { completion in
-                    print("UPLOADED ARCANA")
+                    print("UPLOADED \(nKR)")
                     // check for chainStory, chainStone, dateAdded
                     let arcanaIDRef = FIREBASE_REF.child("arcana/\(id)")
                     if let d = self.dict["dateAdded"] {
@@ -1125,11 +1241,11 @@ class ArcanaDatabase: UIViewController {
                     }
                         
                     else {
-                        print("COULD NOT FIND ARCANA IN FILE. NO NICKNAME AND ICONURL")
+//                        print("COULD NOT FIND ARCANA IN FILE. NO NICKNAME AND ICONURL")
 //                        self.loop.leave()
                     }
 //                    self.loop.notify(queue: DispatchQueue.main, execute: { // Calls the given block when all blocks are finished in the group.
-                        print("notified")
+//                        print("notified")
         //                dispatch_group_wait(self.group, 3000)
                         
                         // Check if arcana has 1 ability
@@ -1642,14 +1758,13 @@ class ArcanaDatabase: UIViewController {
     }
     func retrieveURLS() {
         
-        let baseURL = "https://xn--eckfza0gxcvmna6c.gamerch.com/"
+//        let baseURL = "https://xn--eckfza0gxcvmna6c.gamerch.com/"
         
         
         
         //print("SEARCHING FOR \(string)")
         
         let path = Bundle.main.path(forResource: ".//arcanaData", ofType: "txt")
-        let file = try? NSString(contentsOfFile: path! as String, encoding: String.Encoding.utf8.rawValue)
         let data: Data? = try? Data(contentsOf: URL(fileURLWithPath: path!))
         
         do {
@@ -1693,13 +1808,37 @@ class ArcanaDatabase: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        
+        switch textField {
+        case nameField:
+            iconField.becomeFirstResponder()
+            
+        case iconField:
+            downloadArcana(name: nameField.text!)
+        default:
+            break
+        }
+        
+        
+        return true
+    }
+ 
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.text = nil
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        nameField.delegate = self
+        iconField.delegate = self
 //        retrieveURLS()
 //        prepareImage()
 //        handleImage(uid: "-KTD-6A4Od8klP7gbMV5")
-        downloadArcana()
+//        downloadArcana()
 //        downloadArcana(549)
 
     }
