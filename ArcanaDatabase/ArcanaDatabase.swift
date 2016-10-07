@@ -42,7 +42,6 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                 let arcana = Arcana(snapshot: i as! FIRDataSnapshot)
                 let uid = arcana!.uid
                 if arcana!.nameJP.contains(self.nameField.text!) {
-                    print("FOUND ARCANA NAME")
                     images.updateValue(arcana!.imageURL!, forKey: "main")
                     images.updateValue(self.iconField.text!, forKey: "icon")
                     let iconRef = FIREBASE_REF.child("arcana/\(arcana!.uid)/iconURL")
@@ -56,7 +55,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                             }
                             
                             if let data = data {
-                                print("DOWNLOADED \(image) FOR \(self.nameField.text!)!")
+//                                print("DOWNLOADED \(image) FOR \(self.nameField.text!)!")
                                 // upload to firebase storage.
                                 
                                 let arcanaImageRef = STORAGE_REF.child("image/arcana/\(uid)/\(image).jpg")
@@ -81,6 +80,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                     
                     
                 }
+
                     
             }
             
@@ -303,7 +303,6 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                 skillCount = "2"
             }
             self.dict.updateValue(skillCount, forKey: "skillCount")
-            print("IDENTIFIED NEW PAGE")
             
             // NEW PAGE-2 stars have an ability, unlike old page.
             // Kanna, search through html
@@ -340,7 +339,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                                     // check if 2nd ability
                                     
                                     else {
-                                        print("\(i) IS \(th.innerHTML!)")
+//                                        print("\(i) IS \(th.innerHTML!)")
                                         tables.updateValue(table.innerHTML!, forKey: i)
                                     }
                                     
@@ -543,7 +542,6 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                     for link in parse!.xpath("//td") {
                         
                         let attribute = link.text!
-                        print(attribute)
                         if attribute.contains("精霊石") {
                             foundChainStone = true
                             let trailingString = attribute.substring(from: attribute.indexOf("Lv:")!)
@@ -859,12 +857,11 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
         // WAIT FOR ALL TRANSLATIONS, THEN UPLOAD
         group.notify(queue: DispatchQueue.main, execute: { // Calls the given block when all blocks are finished in the group.
             // All blocks finished, do whatever you like.
-            print("TRANSLATED ARCANA")
             self.download.leave()
             
-            for (key, value) in self.dict {
-                print(key, value)
-            }
+//            for (key, value) in self.dict {
+//                print(key, value)
+//            }
             self.uploadArcana()
         })
         
@@ -872,18 +869,19 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
         
     }
     // Download inputted arcana
-    func downloadArcana(name: String) {
+    @IBAction func downloadArcana(_sender: AnyObject) {
         dict.removeAll()
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
         
+        let name = nameField.text!
         let encodedString = name.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
         
         // proceed to download
         
-        print("PARSING...")
-        print(encodedURL!)
+//        print("PARSING...")
+//        print(encodedURL!)
         
         
         do {
@@ -916,10 +914,10 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
         
         
         self.download.notify(queue: DispatchQueue.main, execute: {
-            print("Finished translating.")
+//            print("Finished translating.")
             
             self.loop.notify(queue: DispatchQueue.main, execute: {
-                print("Finished uploading.")
+//                print("Finished uploading.")
                 self.downloadIcon(_: self)
                 
             })
@@ -987,8 +985,6 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
     
     // Download all arcanas
     func downloadArcana(_ index: Int) {
-        print("INDEX IS \(index)")
-        print("Clearing dict...")
         dict.removeAll()
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
@@ -1018,8 +1014,8 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             else {
                 // proceed to download
                 
-                print("PARSING...")
-                print(encodedURL!)
+//                print("PARSING...")
+//                print(encodedURL!)
                 
                 
                 do {
@@ -1099,7 +1095,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
 //                        if forKey == "nameKR" {
 //                            t = t.replacingOccurrences(of: " ", with: "")
 //                        }
-                        print("TRANSLATED TEXT IS \(t)")
+//                        print("TRANSLATED TEXT IS \(t)")
                         
                         self.dict.updateValue(t, forKey: forKey)
                         //self.dict.updateValue(String(htmlEncodedString: final), forKey: key)
@@ -1124,7 +1120,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
         let ref = FIREBASE_REF.child("arcana")
         
         
-        print("STARTING UPLOAD PROCESS")
+//        print("STARTING UPLOAD PROCESS")
         
         
         // Check if arcana already exists
@@ -1336,7 +1332,6 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                 }
             }
             
-            
             if let aD1 = self.dict["abilityDesc1"] {
                 if aD1.contains("서브") && !aD1.contains("마나를") {
                     let abilityRef = FIREBASE_REF.child("subAbility/\(id)")
@@ -1345,7 +1340,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                     let abilityRef = FIREBASE_REF.child("manaAbility/\(id)")
                     abilityRef.setValue(true)
                 }
-                if aD1.contains("마나 슬롯") && aD1.contains("속도") {
+                if aD1.contains("마나 슬롯") && aD1.contains("속도") && !aD1.contains("이동 속도") {
                     let abilityRef = FIREBASE_REF.child("manaSlotAbility/\(id)")
                     abilityRef.setValue(true)
                 }
@@ -1385,7 +1380,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                     let abilityRef = FIREBASE_REF.child("manaAbility/\(id)")
                     abilityRef.setValue(true)
                 }
-                if aD2.contains("마나 슬롯") && aD2.contains("속도") {
+                if aD2.contains("마나 슬롯") && aD2.contains("속도") && !aD2.contains("이동 속도") {
                     let abilityRef = FIREBASE_REF.child("manaSlotAbility/\(id)")
                     abilityRef.setValue(true)
                 }
@@ -1507,7 +1502,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
     
     func getTavern(_ string: String) -> String {
         
-        let taverns = ["副都", "聖都", "賢者の塔", "迷宮山脈", "湖都", "精霊島", "炎の九領", "海風の港", "夜明けの大海", "ケ者の大陸", "罪の大陸", "薄命の大陸", "鉄煙の大陸", "年代記", "書架", "レムレス島", "魔神", "ガチャ", "グ交換"]
+        let taverns = ["副都", "聖都", "賢者の塔", "迷宮山脈", "湖都", "精霊島", "炎の九領", "海風の港", "夜明けの大海", "ケ者の大陸", "罪の大陸", "薄命の大陸", "鉄煙の大陸", "年代記", "書架", "レムレス島", "華撃団", "魔神", "ガチャ", "グ交換"]
         var tav = ""
     
         for (index, t) in taverns.enumerated() {
@@ -1547,8 +1542,12 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             return "철연의대륙"
         case "年代記":
             return "연대기대륙"
+        case "書架":
+            return "서가"
         case "レムレス島":
             return "레무레스섬"
+        case "華撃団":
+            return "화격단"
         case "魔神":
             return "마신"
         case "義勇軍":
@@ -1642,6 +1641,8 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             return "연대기대륙"
         case "レムレス島":
             return "레무레스섬"
+        case "華撃団":
+            return "화격단"
         case "魔神":
             return "마신"
         case "旅人":
@@ -1817,7 +1818,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             iconField.becomeFirstResponder()
             
         case iconField:
-            downloadArcana(name: nameField.text!)
+            downloadArcana(_sender: self)
         default:
             break
         }
@@ -1830,7 +1831,26 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
         textField.text = nil
     }
     
+    func checkTavern() {
+        
+        let ref = FIREBASE_REF.child("arcana")
+        ref.observeSingleEvent(of: .value, with: { snapshot in
     
+            if let snapDict = snapshot.value as? [String:AnyObject]{
+                
+                for each in snapDict{
+                    
+                    let tavern = each.value["tavern"] as! String
+                    if tavern == "서가" {
+                        let tavernRef = FIREBASE_REF.child("tavern/book/\(each.value["uid"] as! String)")
+                        print(each.value["nameKR"] as! String)
+                        tavernRef.setValue("true")
+                    }
+                }
+            }
+            
+        })
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         nameField.delegate = self
