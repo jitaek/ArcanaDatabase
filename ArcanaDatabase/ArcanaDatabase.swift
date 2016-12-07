@@ -9,7 +9,7 @@
 
 import UIKit
 import Kanna
-import SwiftyJSON3
+import SwiftyJSON
 import Firebase
 import Foundation
 
@@ -17,9 +17,12 @@ import Foundation
 class ArcanaDatabase: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var nameField: UITextField!
+    @IBOutlet weak var imageField: UITextField!
     @IBOutlet weak var iconField: UITextField!
     // let google = "https://www.google.com/searchbyimage?&image_url="
     // let imageURL = "https://cdn.img-conv.gamerch.com/img.gamerch.com/xn--eckfza0gxcvmna6c/149117/20141218143001Q53NTilN.jpg"
+    @IBAction func downloadImage(_ sender: Any) {
+    }
     let baseURL = "https://xn--eckfza0gxcvmna6c.gamerch.com/"
     let group = DispatchGroup()
     let loop = DispatchGroup()
@@ -34,15 +37,21 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
     var arcanaArray = [Arcana]()
     
     
+    @IBAction func updateImages(_ sender: Any) {
+        
+        downloadImages(uid: nameField.text!, imageURL: imageField.text!, iconURL: iconField.text!)
+        
+    }
     @IBAction func downloadIcon(_ sender: AnyObject) {
         var images = [String : String]()
         let ref = FIREBASE_REF.child("arcana")
+        print("DOWNLOADING ICON")
         ref.queryLimited(toLast: 50).observeSingleEvent(of: .value, with: { snapshot in
             for i in snapshot.children.reversed() {
                 let arcana = Arcana(snapshot: i as! FIRDataSnapshot)
                 let uid = arcana!.uid
                 if arcana!.nameJP.contains(self.nameField.text!) {
-                    images.updateValue(arcana!.imageURL!, forKey: "main")
+                    images.updateValue(self.imageField.text!, forKey: "main")
                     images.updateValue(self.iconField.text!, forKey: "icon")
                     let iconRef = FIREBASE_REF.child("arcana/\(arcana!.uid)/iconURL")
                     iconRef.setValue(self.iconField.text!)
@@ -62,7 +71,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                                 
                                 arcanaImageRef.put(NSData(data: data) as Data, metadata: nil) { metadata, error in
                                     if (error != nil) {
-                                        print("ERROR OCCURED WHILE UPLOADING \(image))")
+                                        print("ERROR OCCURED WHILE UPLOADING \(image)")
                                         // Uh-oh, an error occurred!
                                     } else {
                                         // Metadata contains file metadata such as size, content-type, and download URL.
@@ -296,7 +305,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             var tables = [String : String]()
             var skillCount = "1"
             var foundChainStone = false
-            let usefulAttributes = ["名　前", "武器タイプ", "絆ステタイプ", "SKILL", "SKILL 2", "SKILL 3", "ABILITY", "絆の物語", "入手方法", "運命の物語", "出会いの物語", "絆の物語",  "CHAIN STORY"]
+            let usefulAttributes = ["名　前", "武器タイプ", "絆ステタイプ", "SKILL", "SKILL 2", "SKILL 3", "ABILITY", "PARTYABILITY", "絆の物語", "入手方法", "運命の物語", "出会いの物語", "絆の物語",  "CHAIN STORY"]
             if html.contains("SKILL 3") {
                 skillCount = "3"
             } else if html.contains("SKILL 2") {
@@ -331,11 +340,14 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                                 else {
                                     if i == ("SKILL")  {
                                     }
-                                    else if i == "ABILITY" && tables["ABILITY"] != nil {
+                                    else if i == "ABILITY" && tables["ABILITY"] != nil && !tableKey.contains("PARTYABILITY"){
                                         tables.updateValue(table.innerHTML!, forKey: "ABILITY2")
                                         
                                     }
-                                
+                                    else if i == "ABILITY" && tables["ABILITY"] != nil && tables["ABILITY2"] != nil{
+                                        
+                                        tables.updateValue(table.innerHTML!, forKey: "PARTYABILITY")
+                                    }
                                     // check if 2nd ability
                                     
                                     else {
@@ -361,6 +373,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             for (key, value) in tables {
                 
                 let parse = Kanna.HTML(html: value, encoding: String.Encoding.utf8)
+
                 switch key {
                     
                 case "名　前":
@@ -514,6 +527,22 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                             break
                             
                         }
+                        
+                    }
+                    
+                case "PARTYABILITY":
+                    
+                    for (index, link) in parse!.xpath("//td").enumerated() {
+                        
+                        if index == 1 {
+                            let attribute = link.text!
+                            if attribute != "" {
+                                self.translate(attribute, forKey: "partyAbility")
+                            }
+                            
+                            break
+                        }
+
                         
                     }
                     
@@ -867,61 +896,138 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
         
         
         
+        
     }
+    
+    func updateMainImage(uid: String) {
+        let ref = FIREBASE_REF.child("arcana/\(uid)")
+        
+        ref.observeSingleEvent(of: .value, with: { snapshot in
+            let arcana = Arcana(snapshot: snapshot)
+
+            if let imageURL = arcana!.imageURL {
+                
+                let imageCheckRef = STORAGE_REF.child("image/arcana/\(uid)/main.jpg")
+                imageCheckRef.metadata { (metadata, error) -> Void in
+                    if (error == nil) {
+                        // Uh-oh, an error occurred!
+
+                        let url = URL(string: imageURL)
+                        let task = URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
+                            if error != nil {
+                                print("DOWNLOAD MAIN ERROR")
+                            }
+                            
+                            if let data = data {
+                                print("DOWNLOADED MAIN!")
+                                // upload to firebase storage.
+                                
+                                let arcanaImageRef = STORAGE_REF.child("image/arcana/\(uid)/main.jpg")
+                                
+                                arcanaImageRef.put(NSData(data: data) as Data, metadata: nil) { metadata, error in
+                                    if (error != nil) {
+                                        print("ERROR OCCURED WHILE UPLOADING MAIN")
+                                        // Uh-oh, an error occurred!
+                                    } else {
+                                        // Metadata contains file metadata such as size, content-type, and download URL.
+                                        print("UPLOADED MAIN FOR \(arcana!.nameKR)")
+                                        //let downloadURL = metadata!.downloadURL
+                                    }
+                                }
+                                
+                            }
+                            
+                        })
+                        task.resume()
+                        
+                    } else {
+                        // Metadata now contains the metadata for 'images/forest.jpg'
+                        print("IMAGE EXISTS FOR \(arcana!.nameKR)")
+                    }
+                }
+                
+            }
+            
+        })
+        
+    }
+    
     // Download inputted arcana
     @IBAction func downloadArcana(_sender: AnyObject) {
         dict.removeAll()
         download.enter()
         // TODO: Check if the page has #ui_wikidb. If it does, it is the new page, if it doesn't, it is the old page.
-        
+    
         let name = nameField.text!
+        
         let encodedString = name.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         let encodedURL = URL(string: "\(self.baseURL)\(encodedString!)")
         
         // proceed to download
         
-//        print("PARSING...")
+        print("PARSING...")
 //        print(encodedURL!)
         
-        
-        do {
-            let html = try String(contentsOf: encodedURL!, encoding: String.Encoding.utf8)
+        let ref = FIREBASE_REF.child("arcana")
+        ref.observeSingleEvent(of: .value, with: { snapshot in
             
+            var exists = false
             
-            // TODO: THERE ARE ACTUALLY 3 TYPES OF PAGES.
-            // IF IT IS THE OLDEST, IT WONT HAVE <HR>. SO INSTEAD OF PARSING LIKE AN OLD PAGE, SEARCH ARCANADATA FOR BASIC ATTRIBUTES, THEN ONLY GET SKILL/ABILITIES FROM HTML.
+            for i in snapshot.children {
+                let s = ((i as! FIRDataSnapshot).value as! NSDictionary)["nameJP"] as! String
+                if s == name {
+                    exists = true
+                }
+                
+
+            }
             
+            guard exists == false else {
+                print("ARCANA ALREADY EXISTS, STOPPING")
+                return
+            }
             
-            if html.contains("#ui_wikidb") {
-                //                self.downloadAttributes("new", html: html)
-                self.downloadAttributes("new", html: html)
-                self.downloadImage("new", url: encodedURL!)
+            do {
+                let html = try String(contentsOf: encodedURL!, encoding: String.Encoding.utf8)
+                
+                
+                // TODO: THERE ARE ACTUALLY 3 TYPES OF PAGES.
+                // IF IT IS THE OLDEST, IT WONT HAVE <HR>. SO INSTEAD OF PARSING LIKE AN OLD PAGE, SEARCH ARCANADATA FOR BASIC ATTRIBUTES, THEN ONLY GET SKILL/ABILITIES FROM HTML.
+                
+                
+                if html.contains("#ui_wikidb") {
+                    //                self.downloadAttributes("new", html: html)
+                    self.downloadAttributes("new", html: html)
+                    self.downloadImage("new", url: encodedURL!)
+                    
+                }
+                    
+                else {
+                    self.downloadAttributes("old", html: html)
+                    self.downloadImage("old", url: encodedURL!)
+                    
+                }
+                
                 
             }
                 
-            else {
-                self.downloadAttributes("old", html: html)
-                self.downloadImage("old", url: encodedURL!)
-                
+            catch {
+                print(error)
             }
             
             
-        }
-            
-        catch {
-            print(error)
-        }
-        
-        
-        self.download.notify(queue: DispatchQueue.main, execute: {
-//            print("Finished translating.")
-            
-            self.loop.notify(queue: DispatchQueue.main, execute: {
-//                print("Finished uploading.")
-                self.downloadIcon(_: self)
+            self.download.notify(queue: DispatchQueue.main, execute: {
+                print("Finished translating.")
                 
+                self.loop.notify(queue: DispatchQueue.main, execute: {
+                    print("Finished uploading.")
+                    self.downloadIcon(_: self)
+                    
+                })
             })
+
         })
+        
         
         
         
@@ -1065,8 +1171,8 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
     func translate(_ value: String, forKey: String) {
         
         
+//        print("translating \(value) for \(forKey)")
         
-//        print("translating \(value)")
         let encodedString = value.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
         
         if let encodedString = encodedString {
@@ -1095,17 +1201,16 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
 //                        if forKey == "nameKR" {
 //                            t = t.replacingOccurrences(of: " ", with: "")
 //                        }
-//                        print("TRANSLATED TEXT IS \(t)")
                         
                         self.dict.updateValue(t, forKey: forKey)
                         //self.dict.updateValue(String(htmlEncodedString: final), forKey: key)
                         self.group.leave()
                     }
-//                    else {
-//                        self.group.leave()
-//                    }
+
                     
                 }
+
+                
             })
             task.resume()
         }
@@ -1120,7 +1225,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
         let ref = FIREBASE_REF.child("arcana")
         
         
-//        print("STARTING UPLOAD PROCESS")
+        print("STARTING UPLOAD PROCESS")
         
         
         // Check if arcana already exists
@@ -1182,7 +1287,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                 if t != "" {
                     
                     let tavernRef = FIREBASE_REF.child("tavern/\(self.getTavernRef(tavern: t))/\(id)")
-                    tavernRef.setValue("true", withCompletionBlock: { completion in
+                    tavernRef.setValue(true, withCompletionBlock: { completion in
                         print("DONE")
                     })
                 }
@@ -1207,6 +1312,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                         arcanaIDRef.updateChildValues(["dateAdded" : "\(d)"])
                         
                     }
+                    arcanaIDRef.updateChildValues(["numberOfLikes" : 0])
                     if let cStory = self.dict["chainStory"] {
                         arcanaIDRef.updateChildValues(["chainStory" : "\(cStory)"])
                         
@@ -1257,6 +1363,11 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                             }
                             let newArcanaRef = FIREBASE_REF.child("arcana/\(id)")
                             
+                            // if let pa
+                            if let pA = self.dict["partyAbility"] {
+                                let pARef = ["partyAbility" : "\(pA)"]
+                                newArcanaRef.updateChildValues(pARef)
+                            }
                             let abilityRef = ["abilityName2" : "\(aN2)", "abilityDesc2" : "\(aD2)"]
                             self.loop.enter()
                             // Upload Ability 2
@@ -1293,7 +1404,6 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                                     break
                                     
                                 }
-                                
                                 
                             }
                             
@@ -1452,8 +1562,8 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                     let kizunaRef = FIREBASE_REF.child("poisonImmuneKizuna/\(id)")
                     kizunaRef.setValue(true)
                 }
-                if (k.contains("슬로우") || k.contains("스러운")) && k.contains("않는다") {
-                    let kizunaRef = FIREBASE_REF.child("manaChanceAbility/\(id)")
+                if (k.contains("슬로우") || k.contains("스러운")) && (k.contains("않는다") || k.contains("안고")) {
+                    let kizunaRef = FIREBASE_REF.child("slowImmuneKizuna/\(id)")
                     kizunaRef.setValue(true)
                 }
             }
@@ -1830,31 +1940,180 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.text = nil
     }
+
+    func uploadImageWithURL(uid: String, imageURL: String) {
+        
+        
+        
+            let url = URL(string: imageURL)
+            let task = URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
+                if error != nil {
+                    print("DOWNLOAD IMAGE ERROR")
+                }
+                
+                if let data = data {
+
+                    // upload to firebase storage.
+                    
+                    let ref = STORAGE_REF.child("image/arcana/\(uid)/main.jpg")
+                    
+                    ref.put(NSData(data: data) as Data, metadata: nil) { metadata, error in
+                        if (error != nil) {
+                            print("ERROR OCCURED WHILE UPLOADING IMAGE)")
+                            // Uh-oh, an error occurred!
+                        } else {
+                            // Metadata contains file metadata such as size, content-type, and download URL.
+                            print("UPLOADED IMAGE")
+                            
+                            //let downloadURL = metadata!.downloadURL
+                        }
+                    }
+                    
+                }
+                
+            })
+            task.resume()
+        
+        
+    }
     
-    func checkTavern() {
+    func cleanIDS() {
+        let abilityRef = FIREBASE_REF.child("treasureKizuna")
+        abilityRef.observeSingleEvent(of: .value, with: { snapshot in
+            
+            var uid = [String]()
+            
+            for child in snapshot.children {
+                let arcanaID = (child as AnyObject).key as String
+                uid.append(arcanaID)
+            }
+            
+            for id in uid {
+                self.group.enter()
+
+                let ref = FIREBASE_REF.child("arcana/\(id)")
+                ref.observeSingleEvent(of: .value, with: { snapshot in
+                    if snapshot.exists() == false {
+                        print("removing \(id)")
+                        abilityRef.child("\(id)").removeValue()
+                        
+
+                    }
+                    self.group.leave()
+                })
+                
+                
+            }
+            
+            self.group.notify(queue: DispatchQueue.main, execute: {
+                print("DONE")
+            })
+            
+        })
+    }
+    
+    func findAbility() {
         
         let ref = FIREBASE_REF.child("arcana")
+        
         ref.observeSingleEvent(of: .value, with: { snapshot in
-    
-            if let snapDict = snapshot.value as? [String:AnyObject]{
+            
+            let snapDict = snapshot.value as! [String:AnyObject]
+            for arcana in snapDict {
                 
-                for each in snapDict{
-                    
-                    let tavern = each.value["tavern"] as! String
-                    if tavern == "서가" {
-                        let tavernRef = FIREBASE_REF.child("tavern/book/\(each.value["uid"] as! String)")
-                        print(each.value["nameKR"] as! String)
-                        tavernRef.setValue("true")
+//                let arcana = i as? NSDictionary
+                let uid = arcana.value["uid"] as! String
+                let ability1 = arcana.value["abilityDesc1"] as? String
+                let ability2 = arcana.value["abilityDesc2"] as? String
+                let kizuna = arcana.value["kizunaDesc"] as? String
+                
+//                if let ability1 = ability1 {
+//                    if (ability1.contains("슬로우") || ability1.contains("스러운")) && (ability1.contains("않는다") || ability1.contains("안고")) {
+//                        let abilityRef = FIREBASE_REF.child("slowImmuneKizuna/\(uid)")
+//                        print("adding \(uid)")
+//                        abilityRef.setValue(true)
+//                    }
+//                }
+//                if let ability2 = ability2 {
+//                    if (ability2.contains("슬로우") || ability2.contains("스러운")) && (ability2.contains("않는다") || ability2.contains("안고")) {
+//                        let abilityRef = FIREBASE_REF.child("slowImmuneKizuna/\(uid)")
+//                        print("adding \(uid)")
+//                        abilityRef.setValue(true)
+//                    }
+//                }
+                if let kizuna = kizuna {
+                    if (kizuna.contains("슬로우") || kizuna.contains("스러운")) && (kizuna.contains("않는다") || kizuna.contains("안고")) {
+                        let abilityRef = FIREBASE_REF.child("slowImmuneKizuna/\(uid)")
+                        print("adding \(uid)")
+                        abilityRef.setValue(true)
                     }
                 }
+
+            }
+        })
+    }
+    
+    func resetViews() {
+        let ref = FIREBASE_REF.child("arcana")
+        ref.observeSingleEvent(of: .value, with: { snapshot in
+            
+            var uid = [String]()
+            
+            for child in snapshot.children {
+                let arcanaID = (child as AnyObject).key as String
+                uid.append(arcanaID)
+            }
+            
+            for i in uid {
+                ref.child("\(i)/numberOfViews").setValue(0)
+            }
+            
+        })
+    }
+    
+    func login() {
+    
+        FIRAuth.auth()?.signIn(withEmail: "jitaekim93@gmail.com", password: "erin0517") { (user, error) in
+            if error != nil {
+                
+            }
+            else {
+                print("logged in!")
+
+            }
+        }
+        
+        
+    }
+    
+    func addNumberOfLikes() {
+        let ref = FIREBASE_REF.child("arcana")
+        ref.observeSingleEvent(of: .value, with: { snapshot in
+            
+            var uid = [String]()
+            
+            for child in snapshot.children {
+                let arcanaID = (child as AnyObject).key as String
+                uid.append(arcanaID)
+            }
+            
+            for i in uid {
+                ref.child("\(i)/numberOfLikes").setValue(0)
             }
             
         })
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        login()
+//        updateMainImage(uid: "-KUy0e9llRNn-VrXJInw")
+//        addNumberOfLikes()
         nameField.delegate = self
+        imageField.delegate = self
         iconField.delegate = self
+//        resetViews()
+//        findAbility()
+//        cleanIDS()
 //        retrieveURLS()
 //        prepareImage()
 //        handleImage(uid: "-KTD-6A4Od8klP7gbMV5")

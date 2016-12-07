@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -19,52 +21,85 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zym-8j-IuV">
+                                <rect key="frame" x="10" y="110.5" width="355" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="아르카나 이름 입력" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pOH-5z-HCv">
+                                <rect key="frame" x="124.5" y="70" width="126.5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="아이콘 주소" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEp-QM-Gtl">
+                                <rect key="frame" x="148.5" y="251.5" width="78" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HZz-1Y-3zx">
-                                <state key="normal" title="아이콘 다운받기"/>
+                                <rect key="frame" x="134" y="352" width="108" height="30"/>
+                                <state key="normal" title="아르카나 다운받기"/>
                                 <connections>
                                     <action selector="downloadArcanaWith_sender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bAh-MU-B01"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HPH-bo-a3h">
+                                <rect key="frame" x="10" y="292" width="355" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="메인 이미지 주소" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eK2-8z-sfb">
+                                <rect key="frame" x="131.5" y="160.5" width="112" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YyD-g5-20H">
+                                <rect key="frame" x="10" y="201.5" width="355" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X3h-mB-zfp">
+                                <rect key="frame" x="140" y="422" width="95" height="30"/>
+                                <state key="normal" title="이미지 다운받기"/>
+                                <connections>
+                                    <action selector="updateImages:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SrQ-YW-Ij5"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="zym-8j-IuV" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="32c-Nz-kzQ"/>
                             <constraint firstItem="zym-8j-IuV" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="10" id="4p0-pa-GqR"/>
                             <constraint firstAttribute="trailing" secondItem="zym-8j-IuV" secondAttribute="trailing" constant="10" id="5hu-la-OpQ"/>
+                            <constraint firstAttribute="trailing" secondItem="YyD-g5-20H" secondAttribute="trailing" constant="10" id="9yx-p0-MIs"/>
+                            <constraint firstItem="X3h-mB-zfp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="S1n-hb-dVR"/>
                             <constraint firstItem="HZz-1Y-3zx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="SIG-Yr-bVZ"/>
                             <constraint firstItem="HZz-1Y-3zx" firstAttribute="top" secondItem="HPH-bo-a3h" secondAttribute="bottom" constant="30" id="U4x-G0-mHL"/>
+                            <constraint firstItem="dEp-QM-Gtl" firstAttribute="top" secondItem="YyD-g5-20H" secondAttribute="bottom" constant="20" id="V53-Z6-Uic"/>
+                            <constraint firstItem="eK2-8z-sfb" firstAttribute="top" secondItem="zym-8j-IuV" secondAttribute="bottom" constant="20" id="Wdo-gn-WbC"/>
                             <constraint firstItem="pOH-5z-HCv" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="XXv-B5-cza"/>
                             <constraint firstItem="dEp-QM-Gtl" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ZOc-VT-Mzr"/>
                             <constraint firstItem="HPH-bo-a3h" firstAttribute="top" secondItem="dEp-QM-Gtl" secondAttribute="bottom" constant="20" id="g4x-26-ZiR"/>
-                            <constraint firstItem="dEp-QM-Gtl" firstAttribute="top" secondItem="zym-8j-IuV" secondAttribute="bottom" constant="50" id="h6P-r7-kdZ"/>
+                            <constraint firstItem="eK2-8z-sfb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="gfx-v0-WLG"/>
                             <constraint firstItem="pOH-5z-HCv" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="50" id="iQb-Bz-i6B"/>
+                            <constraint firstItem="YyD-g5-20H" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="khW-Q5-ga6"/>
+                            <constraint firstItem="YyD-g5-20H" firstAttribute="top" secondItem="eK2-8z-sfb" secondAttribute="bottom" constant="20" id="n6P-Rb-hwB"/>
+                            <constraint firstItem="X3h-mB-zfp" firstAttribute="top" secondItem="HZz-1Y-3zx" secondAttribute="bottom" constant="40" id="okZ-rh-Cye"/>
                             <constraint firstItem="HPH-bo-a3h" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="10" id="om6-sO-QDj"/>
                             <constraint firstItem="zym-8j-IuV" firstAttribute="top" secondItem="pOH-5z-HCv" secondAttribute="bottom" constant="20" id="owp-rH-Wwt"/>
                             <constraint firstItem="HPH-bo-a3h" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="prT-qU-IaO"/>
+                            <constraint firstItem="YyD-g5-20H" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="10" id="xVv-vM-Fpm"/>
                             <constraint firstAttribute="trailing" secondItem="HPH-bo-a3h" secondAttribute="trailing" constant="10" id="y3q-hK-Brh"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="iconField" destination="HPH-bo-a3h" id="dLB-ZN-DSo"/>
+                        <outlet property="imageField" destination="YyD-g5-20H" id="syz-R3-ZXz"/>
                         <outlet property="nameField" destination="zym-8j-IuV" id="kUV-mu-LJg"/>
                     </connections>
                 </viewController>
