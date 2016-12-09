@@ -28,6 +28,16 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "04F243A61DF8BBB600BC48D5"
+               BuildableName = "ArcanaDatabaseTests.xctest"
+               BlueprintName = "ArcanaDatabaseTests"
+               ReferencedContainer = "container:ArcanaDatabase.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

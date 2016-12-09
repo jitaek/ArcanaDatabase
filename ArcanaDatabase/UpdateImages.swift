@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import Firebase
 
 // Update both images given UID. If one of the URLS are empty, don't update that one only.
 
@@ -29,6 +29,7 @@ func downloadImages(uid: String, imageURL: String, iconURL: String) {
             
             if image == "main" {
                 ref.child("imageURL").setValue(url)
+                
             }
             else {
                 ref.child("iconURL").setValue(url)
@@ -63,3 +64,26 @@ func downloadImages(uid: String, imageURL: String, iconURL: String) {
     }
     
 }
+
+func downloadImages(nameJP: String, imageURL: String, iconURL: String) {
+    
+    let ref = FIREBASE_REF.child("arcana")
+    
+    ref.queryLimited(toLast: 50).observeSingleEvent(of: .value, with: { snapshot in
+        print("Searching for arcana uid...")
+        for i in snapshot.children.reversed() {
+            let arcana = Arcana(snapshot: i as! FIRDataSnapshot)
+            let uid = arcana!.uid
+            if arcana!.nameJP.contains(nameJP) {
+                
+                downloadImages(uid: uid, imageURL: imageURL, iconURL: iconURL)
+                
+            }
+            
+            
+        }
+        
+    })
+    
+}
+

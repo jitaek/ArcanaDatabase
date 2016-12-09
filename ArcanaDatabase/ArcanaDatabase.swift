@@ -42,195 +42,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
         downloadImages(uid: nameField.text!, imageURL: imageField.text!, iconURL: iconField.text!)
         
     }
-    @IBAction func downloadIcon(_ sender: AnyObject) {
-        var images = [String : String]()
-        let ref = FIREBASE_REF.child("arcana")
-        print("DOWNLOADING ICON")
-        ref.queryLimited(toLast: 50).observeSingleEvent(of: .value, with: { snapshot in
-            for i in snapshot.children.reversed() {
-                let arcana = Arcana(snapshot: i as! FIRDataSnapshot)
-                let uid = arcana!.uid
-                if arcana!.nameJP.contains(self.nameField.text!) {
-                    images.updateValue(self.imageField.text!, forKey: "main")
-                    images.updateValue(self.iconField.text!, forKey: "icon")
-                    let iconRef = FIREBASE_REF.child("arcana/\(arcana!.uid)/iconURL")
-                    iconRef.setValue(self.iconField.text!)
-                    
-                    for (image, url) in images {
-                        let url = URL(string: url)
-                        let task = URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
-                            if error != nil {
-                                print("DOWNLOAD \(image) ERROR")
-                            }
-                            
-                            if let data = data {
-//                                print("DOWNLOADED \(image) FOR \(self.nameField.text!)!")
-                                // upload to firebase storage.
-                                
-                                let arcanaImageRef = STORAGE_REF.child("image/arcana/\(uid)/\(image).jpg")
-                                
-                                arcanaImageRef.put(NSData(data: data) as Data, metadata: nil) { metadata, error in
-                                    if (error != nil) {
-                                        print("ERROR OCCURED WHILE UPLOADING \(image)")
-                                        // Uh-oh, an error occurred!
-                                    } else {
-                                        // Metadata contains file metadata such as size, content-type, and download URL.
-                                        print("UPLOADED \(image) FOR \(arcana!.nameKR)")
-                                        
-                                        //let downloadURL = metadata!.downloadURL
-                                    }
-                                }
-                                
-                            }
-                            
-                        })
-                        task.resume()
-                    }
-                    
-                    
-                }
-
-                    
-            }
-            
-        })
-        
-    }
     
-    func handleImage(uid: String) {
-        let ref = FIREBASE_REF.child("arcana/\(uid)")
-        
-        ref.observeSingleEvent(of: .value, with: { snapshot in
-            let arcana = Arcana(snapshot: snapshot)
-            var images = [String : String]()
-            
-            if let iconURL = arcana!.iconURL {
-                images.updateValue(iconURL, forKey: "icon")
-            }
-            
-            if let imageURL = arcana!.imageURL {
-                images.updateValue(imageURL, forKey: "main")
-            }
-            
-            for (image, url) in images {
-
-            let imageCheckRef = STORAGE_REF.child("image/arcana/\(uid)/\(image).jpg")
-            imageCheckRef.metadata { (metadata, error) -> Void in
-                if (error != nil) {
-                    // Uh-oh, an error occurred!
-                    print("\(image) does not exist, so download.")
-                        print(image, url)
-                        let url = URL(string: url)
-                        let task = URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
-                            if error != nil {
-                                print("DOWNLOAD \(image) ERROR")
-                            }
-                            
-                            if let data = data {
-                                print("DOWNLOADED \(image)!")
-                                // upload to firebase storage.
-                                
-                                let arcanaImageRef = STORAGE_REF.child("image/arcana/\(uid)/\(image).jpg")
-                                
-                                arcanaImageRef.put(NSData(data: data) as Data, metadata: nil) { metadata, error in
-                                    if (error != nil) {
-                                        print("ERROR OCCURED WHILE UPLOADING \(image)")
-                                        // Uh-oh, an error occurred!
-                                    } else {
-                                        // Metadata contains file metadata such as size, content-type, and download URL.
-                                        print("UPLOADED \(image) FOR \(arcana!.nameKR)")
-                                        //let downloadURL = metadata!.downloadURL
-                                    }
-                                }
-                                
-                            }
-                            
-                        })
-                        task.resume()
-                    
-                } else {
-                    // Metadata now contains the metadata for 'images/forest.jpg'
-                    print("IMAGE EXISTS FOR \(arcana!.nameKR)")
-                }
-                }
-            }
-            
-            
-        })
-        
-    }
-    
-    func handleImage(_ index: Int) {
-        let ref = FIREBASE_REF.child("arcana")
-        var images = [String : String]()
-        
-        ref.observeSingleEvent(of: .value, with: { snapshot in
-
-            let arcana = self.arcanaArray[index]
-                // check if image is already uploaded.
-            let uid = arcana.uid
-            if let iconURL = arcana.iconURL {
-                images.updateValue(iconURL, forKey: "icon")
-            }
-            if let mainURL = arcana.imageURL {
-                images.updateValue(mainURL, forKey: "main")
-            }
-
-            let imageCheckRef = STORAGE_REF.child("image/arcana/\(uid)/main.jpg")
-            imageCheckRef.metadata { (metadata, error) -> Void in
-                if (error != nil) {
-                    // Uh-oh, an error occurred!
-                    print("IMAGE DOES NOT EXIST, SO DOWNLOAD")
-                    for (image, url) in images {
-                        print(image, url)
-                        self.download.enter()
-                        let url = URL(string: url)
-                        let task = URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
-                            if error != nil {
-                                print("DOWNLOAD \(image) ERROR")
-                                self.download.leave()
-                            }
-                            
-                            if let data = data {
-                                print("DOWNLOADED \(image)!")
-                                // upload to firebase storage.
-                                
-                                let arcanaImageRef = STORAGE_REF.child("image/arcana/\(uid)/\(image).jpg")
-                                
-                                arcanaImageRef.put(NSData(data: data) as Data, metadata: nil) { metadata, error in
-                                    if (error != nil) {
-                                        print("ERROR OCCURED WHILE UPLOADING \(image)")
-                                        self.download.leave()
-                                        // Uh-oh, an error occurred!
-                                    } else {
-                                        // Metadata contains file metadata such as size, content-type, and download URL.
-                                        print("UPLOADED \(image) FOR \(arcana.nameKR)")
-                                        self.download.leave()
-                                        //let downloadURL = metadata!.downloadURL
-                                    }
-                                }
-                                
-                            }
-                            
-                        })
-                        task.resume()
-                    }
-                } else {
-                    // Metadata now contains the metadata for 'images/forest.jpg'
-                    print("IMAGE EXISTS FOR \(arcana.nameKR)")
-                }
-            }
-               
-            self.download.notify(queue: DispatchQueue.main, execute: {
-                print("Downloaded images, go to next arcana.")
-                self.handleImage(index + 1)
-            })
-            
-            
-        })
-    
-    }
-
     func downloadTavern() {
         
         let encodedString = arcanaURL.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
@@ -998,13 +810,13 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                 if html.contains("#ui_wikidb") {
                     //                self.downloadAttributes("new", html: html)
                     self.downloadAttributes("new", html: html)
-                    self.downloadImage("new", url: encodedURL!)
+//                    self.downloadImage("new", url: encodedURL!)
                     
                 }
                     
                 else {
                     self.downloadAttributes("old", html: html)
-                    self.downloadImage("old", url: encodedURL!)
+//                    self.downloadImage("old", url: encodedURL!)
                     
                 }
                 
@@ -1019,9 +831,10 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             self.download.notify(queue: DispatchQueue.main, execute: {
                 print("Finished translating.")
                 
-                self.loop.notify(queue: DispatchQueue.main, execute: {
+                self.loop.notify(queue: DispatchQueue.main, execute: { [unowned self] in
                     print("Finished uploading.")
-                    self.downloadIcon(_: self)
+//                    self.downloadIcon(_: self)
+                    downloadImages(uid: self.dict["uid"]!, imageURL: self.imageField.text!, iconURL: self.iconField.text!)
                     
                 })
             })
@@ -1278,10 +1091,10 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                 for i in checkedArray {
                     print(i)
                 }
-                guard let imageURL = self.dict["imageURL"] else {
-                    print("COULD NOT GET IMAGEURL FROM DICTIONARY")
-                    return
-                }
+//                guard let imageURL = self.dict["imageURL"] else {
+//                    print("COULD NOT GET IMAGEURL FROM DICTIONARY")
+//                    return
+//                }
                 
 //                upload to tavernRef. only upload if it has a tavern.
                 if t != "" {
@@ -1297,7 +1110,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                 nameID.setValue("\(nKR)")
                 
                 
-                let arcanaOneSkill = ["uid" : "\(id)", "nameKR" : "\(nKR)", "nameJP" : "\(nJP)", "rarity" : "\(r)", "class" : "\(g)", "tavern" : "\(t)", "affiliation" : "\(a)", "cost" : "\(c)", "weapon" : "\(w)", "kizunaName" : "\(kN)", "kizunaCost" : "\(kC)", "kizunaDesc" : "\(kD)", "skillCount" : "\(sC)", "skillName1" : "\(sN1)", "skillMana1" : "\(sM1)", "skillDesc1" : "\(sD1)", "numberOfViews" : 0, "imageURL" : "\(imageURL)"] as [String : Any]
+                let arcanaOneSkill = ["uid" : "\(id)", "nameKR" : "\(nKR)", "nameJP" : "\(nJP)", "rarity" : "\(r)", "class" : "\(g)", "tavern" : "\(t)", "affiliation" : "\(a)", "cost" : "\(c)", "weapon" : "\(w)", "kizunaName" : "\(kN)", "kizunaCost" : "\(kC)", "kizunaDesc" : "\(kD)", "skillCount" : "\(sC)", "skillName1" : "\(sN1)", "skillMana1" : "\(sM1)", "skillDesc1" : "\(sD1)", "numberOfViews" : 0] as [String : Any]
                 
                 let arcanaRef = ["\(id)" : arcanaOneSkill]
                 
@@ -1612,12 +1425,18 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
     
     func getTavern(_ string: String) -> String {
         
-        let taverns = ["副都", "聖都", "賢者の塔", "迷宮山脈", "湖都", "精霊島", "炎の九領", "海風の港", "夜明けの大海", "ケ者の大陸", "罪の大陸", "薄命の大陸", "鉄煙の大陸", "年代記", "書架", "レムレス島", "華撃団", "魔神", "ガチャ", "グ交換"]
+        let taverns = ["副都", "聖都", "賢者の塔", "迷宮山脈", "湖都", "精霊島", "炎の九領", "海風の港", "夜明けの大海", "ケ者の大陸", "罪の大陸", "薄命の大陸", "鉄煙の大陸", "年代記", "書架", "レムレス島", "華撃団", "魔神", /*"ガチャ",*/ "グ交換", "聖王国"]
         var tav = ""
     
         for (index, t) in taverns.enumerated() {
             if string.contains(t) {
-                tav = taverns[index]
+                if string.contains("3部") && t != "聖王国" {
+                    tav = "\(taverns[index])2"
+                }
+                else {
+                    tav = taverns[index]
+                }
+                
                 break
             }
         }
@@ -1666,6 +1485,18 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             return "링가챠"
         case "グ交換":
             return "링교환"
+            
+            // 3부 주점
+        case "聖王国":
+            return "성왕국"
+        case "賢者の塔2":
+            return "현자의탑 3부"
+        case "湖都2":
+            return "호수도시 3부"
+        case "精霊島2":
+            return "정령섬 3부"
+        case "炎の九領2":
+            return "화염구령 3부"
         default:
             return ""
         }
@@ -1896,29 +1727,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             print(error)
         }
     }
-    
-    func prepareImage() {
-        self.loop.enter()
-        let ref = FIREBASE_REF.child("arcana")
-        ref.observeSingleEvent(of: .value, with: { snapshot in
-            for i in snapshot.children {
-                let arcana = Arcana(snapshot: i as! FIRDataSnapshot)
-                self.arcanaArray.append(arcana!)
-            }
-            self.loop.leave()
-        })
-        self.download.notify(queue: DispatchQueue.main, execute: {
-            print("FINISHED DOWNLOADING ARCANA")
-            self.handleImage(0)
-        })
 
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -2115,8 +1924,6 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
 //        findAbility()
 //        cleanIDS()
 //        retrieveURLS()
-//        prepareImage()
-//        handleImage(uid: "-KTD-6A4Od8klP7gbMV5")
 //        downloadArcana()
 //        downloadArcana(549)
 
