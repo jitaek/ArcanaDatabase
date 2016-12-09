@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 enum Affiliation {
     
     // 1부 주점
@@ -27,6 +28,7 @@ enum Affiliation {
         static let KR = "현자의탑"
         static let KRshort = "현탑"
         static let JP = "賢者の塔"
+        static let JPshort = "賢者"
         static let EN = "sage"
     }
     
@@ -34,6 +36,7 @@ enum Affiliation {
         static let KR = "미궁산맥"
         static let KRshort = "미궁"
         static let JP = "迷宮山脈"
+        static let JPshort = "迷宮"
         static let EN = "maze"
     }
     
@@ -110,6 +113,12 @@ enum Affiliation {
         static let EN = "lemures"
     }
     
+    enum traveler {
+        static let KR = "여행자"
+        static let JP = "旅人"
+        static let EN = "traveler"
+    }
+    
     enum volunteer {
         static let KR = "의용군"
         static let JP = "義勇軍"
@@ -130,151 +139,17 @@ enum Affiliation {
     
 }
 
+func getAffiliation(string: String) -> String {
 
-
-
-
-
-
-func getTavern(_ string: String) -> String {
-    
-    let taverns = ["副都", "聖都", "賢者の塔", "迷宮山脈", "湖都", "精霊島", "炎の九領", "海風の港", "夜明けの大海", "ケ者の大陸", "罪の大陸", "薄命の大陸", "鉄煙の大陸", "年代記", "書架", "レムレス島", "華撃団", "魔神", /*"ガチャ",*/ "グ交換", "聖王国"]
-    var tav = ""
-    
-    for (index, t) in taverns.enumerated() {
-        if string.contains(t) {
-            if string.contains("3部") && t != "聖王国" {
-                tav = "\(taverns[index])2"
-            }
-            else {
-                tav = taverns[index]
-            }
-            
-            break
-        }
-    }
-    
-    switch tav {
-        
-    case "副都":
-        return "부도"
-    case "聖都":
-        return "성도"
-    case "賢者の塔":
-        return "현자의탑"
-    case "迷宮山脈":
-        return "미궁산맥"
-    case "湖都":
-        return "호수도시"
-    case "精霊島":
-        return "정령섬"
-    case "炎の九領":
-        return "화염구령"
-    case "海風の港":
-        return "해풍의항구"
-    case "夜明けの大海":
-        return "새벽대해"
-    case "ケ者の大陸":
-        return "수인의대륙"
-    case "罪の大陸":
-        return "죄의대륙"
-    case "薄命の大陸":
-        return "박명의대륙"
-    case "鉄煙の大陸":
-        return "철연의대륙"
-    case "年代記":
-        return "연대기대륙"
-    case "書架":
-        return "서가"
-    case "レムレス島":
-        return "레무레스섬"
-    case "華撃団":
-        return "화격단"
-    case "魔神":
-        return "마신"
-    case "義勇軍":
-        return "의용군"
-    case "リングガチャ":
-        return "링가챠"
-    case "グ交換":
-        return "링교환"
-        
-    // 3부 주점
-    case "聖王国":
-        return "성왕국"
-    case "賢者の塔2":
-        return "현자의탑 3부"
-    case "湖都2":
-        return "호수도시 3부"
-    case "精霊島2":
-        return "정령섬 3부"
-    case "炎の九領2":
-        return "화염구령 3부"
-    default:
-        return ""
-    }
-    
-}
-
-func getTavernRef(tavern: String) -> String {
-    
-    switch tavern {
-        
-    case "부도":
-        return "capital"
-    case "성도":
-        return "holy"
-    case "현자의탑":
-        return "sage"
-    case "미궁산맥":
-        return "maze"
-    case "호수도시":
-        return "lake"
-    case "정령섬":
-        return "soul"
-    case "화염구령":
-        return "fire"
-    case "해풍의항구":
-        return "seaBreeze"
-    case "새벽대해":
-        return "daybreakOcean"
-    case "수인의대륙":
-        return "beast"
-    case "죄의대륙":
-        return "sin"
-    case "박명의대륙":
-        return "ephemerality"
-    case "철연의대륙":
-        return "iron"
-    case "연대기대륙":
-        return "chronicle"
-    case "서가":
-        return "book"
-    case "레무레스섬":
-        return "lemures"
-    case "마신":
-        return "demon"
-    case "링가챠":
-        return "ringGacha"
-    case "링교환":
-        return "ringChange"
-    default:
-        return ""
-    }
-    
-}
-
-func getAffiliation(_ string: String) -> String {
-    // two types, second is for old arcana in text file
     switch string {
-    case "副都":
-        return "부도"
-    case "聖都":
-        return "성도"
-    case "賢者の塔", "賢者":
-        return "현자의탑"
-    case "迷宮山脈", "迷宮":
-        return "미궁산맥"
+    case Affiliation.capital.JP:
+        return Affiliation.capital.KR
+    case Affiliation.holy.JP:
+        return Affiliation.holy.KR
+    case Affiliation.sage.JP, Affiliation.sage.JPshort:
+        return Affiliation.sage.KR
+    case Affiliation.maze.JP, Affiliation.maze.JPshort:
+        return Affiliation.maze.JP
     case "湖都":
         return "호수도시"
     case "精霊島", "海風":

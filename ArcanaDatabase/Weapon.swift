@@ -8,69 +8,92 @@
 
 import Foundation
 
-enum Weapon {
+class Weapon {
     
-    enum sword {
-        static let KR = "검"
-        static let JP = "斬"
+    private let KR: String
+    private let JP: String
+    
+    init(kr: String, jp: String) {
+        self.KR = kr
+        self.JP = jp
     }
     
-    enum blunt {
-        static let KR = "봉"
-        static let JP = "打"
+    func getKR() -> String {
+        return KR
     }
     
-    enum spear {
-        static let KR = "창"
-        static let JP = "突"
+    func getJP() -> String {
+        return JP
     }
     
-    enum bow {
-        static let KR = "궁"
-        static let JP = "弓"
-    }
     
-    enum wand {
-        static let KR = "마"
-        static let JP = "魔"
-    }
-    
-    enum heal {
-        static let KR = "성"
-        static let JP = "聖"
-    }
-    
-    enum fist {
-        static let KR = "권"
-        static let JP = "拳"
-    }
-    
-    enum gun {
-        static let KR = "총"
-        static let JP = "銃"
-    }
-    
-    enum rifle {
-        static let KR = "저"
-        static let JP = "狙"
+}
+
+class Sword: Weapon {
+    init() {
+        super.init(kr: "검", jp: "斬")
     }
 }
 
-func getWeaponJPKR(_ string: String) -> String {
-    
-    let weaponsJP = [Weapon.sword.JP, Weapon.blunt.JP, Weapon.spear.JP, Weapon.bow.JP, Weapon.wand.JP, Weapon.heal.JP, Weapon.fist.JP, Weapon.gun.JP, Weapon.rifle.JP]
-    let weaponsKR = [Weapon.sword.KR, Weapon.blunt.KR, Weapon.spear.KR, Weapon.bow.KR, Weapon.wand.KR, Weapon.heal.KR, Weapon.fist.KR, Weapon.gun.KR, Weapon.rifle.KR]
-    
+class Blunt: Weapon {
+    init() {
+        super.init(kr: "봉", jp: "打")
+    }
+}
 
-    for (index, weapon) in weaponsJP.enumerated() {
-        
-        if string.contains(weapon) {
-            return weaponsKR[index]
+class Spear: Weapon {
+    init() {
+        super.init(kr: "창", jp: "突")
+    }
+}
+
+class Bow: Weapon {
+    init() {
+        super.init(kr: "궁", jp: "弓")
+    }
+}
+
+class Wand: Weapon {
+    init() {
+        super.init(kr: "마", jp: "魔")
+    }
+}
+
+class Heal: Weapon {
+    init() {
+        super.init(kr: "성", jp: "聖")
+    }
+}
+
+class Fist: Weapon {
+    init() {
+        super.init(kr: "권", jp: "拳")
+    }
+}
+
+class Gun: Weapon {
+    init() {
+        super.init(kr: "총", jp: "銃")
+    }
+}
+
+class Rifle: Weapon {
+    init() {
+        super.init(kr: "저", jp: "狙")
+    }
+}
+
+func getWeaponJPKR(string: String) -> String {
+
+    let weapons: [Weapon] = [Sword(), Blunt(), Spear(), Bow(), Wand(), Heal(), Fist(), Gun(), Rifle()]
+    
+    for w in weapons {
+        if string.contains(w.getJP()) {
+            return w.getKR()
         }
-        
     }
     
     print("didn't find weapon")
-    return ""
+    return "-"
     
 }

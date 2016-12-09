@@ -127,37 +127,46 @@ enum Tavern {
     }
     
     enum sage2 {
-        static let KR = "현자의탑"
+        static let KR = "현자의탑 3부"
         static let JP = "賢者の塔"
         static let EN = "sage3"
     }
     
-    
     enum lake2 {
-        static let KR = "호수도시"
+        static let KR = "호수도시 3부"
         static let JP = "湖都"
         static let EN = "lake"
     }
     
     enum soul2 {
-        static let KR = "정령섬"
+        static let KR = "정령섬 3부"
         static let JP = "精霊島"
         static let EN = "soul"
     }
     
     enum fire2 {
-        static let KR = "화염구령"
+        static let KR = "화염구령 3부"
         static let KRshort = "구령"
         static let JP = "炎の九領"
         static let EN = "fire"
     }
 
     
-    //    enum flower {
-    //        static let KR = "화격단"
-    //        static let JP = "華撃団"
-    //        static let EN = "sakura"
-    //    }
+    // 링가챠, 링교환
+    
+    enum ringGacha {
+        static let KR = "링가챠"
+        static let JP = "グ交換"
+        static let EN = "ringGacha"
+    }
+    
+    enum ringTrade {
+        static let KR = "링교환"
+        static let JP = "リングガチャ"
+        static let EN = "ringTrade"
+    }
+    
+    
 
 }
 
@@ -246,47 +255,60 @@ func getTavern(_ string: String) -> String {
     }
     
 }
+ 
+ */
 
 func getTavernRef(tavern: String) -> String {
     
     switch tavern {
         
-    case "부도":
+    case Tavern.capital.KR:
         return "capital"
-    case "성도":
+    case Tavern.holy.KR:
         return "holy"
-    case "현자의탑":
+    case Tavern.sage.KR:
         return "sage"
-    case "미궁산맥":
+    case Tavern.maze.KR:
         return "maze"
-    case "호수도시":
+    case Tavern.lake.KR:
         return "lake"
-    case "정령섬":
+    case Tavern.soul.KR:
         return "soul"
-    case "화염구령":
+    case Tavern.fire.KR:
         return "fire"
-    case "해풍의항구":
+    case Tavern.seaBreeze.KR:
         return "seaBreeze"
-    case "새벽대해":
+        
+    case Tavern.daybreakOcean.KR:
         return "daybreakOcean"
-    case "수인의대륙":
+    case Tavern.beast.KR:
         return "beast"
-    case "죄의대륙":
+    case Tavern.sin.KR:
         return "sin"
-    case "박명의대륙":
+    case Tavern.ephemerality.KR:
         return "ephemerality"
-    case "철연의대륙":
+    case Tavern.iron.KR:
         return "iron"
-    case "연대기대륙":
+    case Tavern.chronicle.KR:
         return "chronicle"
-    case "서가":
+    case Tavern.book.KR:
         return "book"
-    case "레무레스섬":
+    case Tavern.lemures.KR:
         return "lemures"
-    case "마신":
-        return "demon"
+        
+    case Tavern.holyKingdom.KR:
+        return "holyKingdom"
+    case Tavern.sage2.KR:
+        return "sage2"
+    case Tavern.lake2.KR:
+        return "lake2"
+    case Tavern.soul2.KR:
+        return "soul2"
+    case Tavern.fire2.KR:
+        return "fire2"
+        
     case "링가챠":
-        return "ringGacha"
+        return "ringChange"
     case "링교환":
         return "ringChange"
     default:
@@ -295,49 +317,4 @@ func getTavernRef(tavern: String) -> String {
     
 }
 
-func getAffiliation(_ string: String) -> String {
-    // two types, second is for old arcana in text file
-    switch string {
-    case "副都":
-        return "부도"
-    case "聖都":
-        return "성도"
-    case "賢者の塔", "賢者":
-        return "현자의탑"
-    case "迷宮山脈", "迷宮":
-        return "미궁산맥"
-    case "湖都":
-        return "호수도시"
-    case "精霊島", "海風":
-        return "정령섬"
-    case "九領":
-        return "화염구령"
-    case "大海":
-        return "대해"
-    case "ケ者の大陸", "ケ者":
-        return "수인의대륙"
-    case "罪の大陸", "罪":
-        return "죄의대륙"
-    case "薄命の大陸", "薄命":
-        return "박명의대륙"
-    case "鉄煙の大陸", "鉄煙":
-        return "철연의대륙"
-    case "年代記の大陸":
-        return "연대기대륙"
-    case "レムレス島":
-        return "레무레스섬"
-    case "華撃団":
-        return "화격단"
-    case "魔神":
-        return "마신"
-    case "旅人":
-        return "여행자"
-    case "義勇軍":
-        return "의용군"
-        
-    default:
-        return ""
-    }
-    
-}
-*/
+

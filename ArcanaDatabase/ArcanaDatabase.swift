@@ -812,6 +812,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                     self.downloadAttributes("new", html: html)
 //                    self.downloadImage("new", url: encodedURL!)
                     
+                    
                 }
                     
                 else {
@@ -1002,8 +1003,8 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
 
                         // get rid of &quot; and &lt &gt;
                         var t = translatedText.replacingOccurrences(of: "&quot;", with: " ")
-                        t = t.replacingOccurrences(of: "&lt;", with: "")
-                        t = t.replacingOccurrences(of: "&gt;", with: "")
+//                        t = t.replacingOccurrences(of: "&lt;", with: "")
+//                        t = t.replacingOccurrences(of: "&gt;", with: "")
                         // some have quotes at start, so remove whitespace
                         t = t.trimmingCharacters(in: .whitespacesAndNewlines)
                         // remove double spaces
@@ -1119,6 +1120,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                 
                 ref.updateChildValues(arcanaRef, withCompletionBlock: { completion in
                     print("UPLOADED \(nKR)")
+                    downloadImages(nameJP: self.nameField.text!, imageURL: self.imageField.text!, iconURL: self.iconField.text!)
                     // check for chainStory, chainStone, dateAdded
                     let arcanaIDRef = FIREBASE_REF.child("arcana/\(id)")
                     if let d = self.dict["dateAdded"] {
@@ -1882,9 +1884,9 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
     
     func login() {
     
-        FIRAuth.auth()?.signIn(withEmail: "jitaekim93@gmail.com", password: "erin0517") { (user, error) in
+        FIRAuth.auth()?.signIn(withEmail: "test@gmail.com", password: "test123") { (user, error) in
             if error != nil {
-                
+                print("could not login")
             }
             else {
                 print("logged in!")

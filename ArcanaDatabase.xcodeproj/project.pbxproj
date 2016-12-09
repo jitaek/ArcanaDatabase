@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		040454931DFB563300A1F74E /* Ability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040454921DFB563300A1F74E /* Ability.swift */; };
 		0448942E1DF7835900963146 /* UpdateImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0448942D1DF7835900963146 /* UpdateImages.swift */; };
 		044894361DF7F4F700963146 /* ArcanaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044894351DF7F4F700963146 /* ArcanaData.swift */; };
 		044AB0151D8DFD6400B6678F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044AB0141D8DFD6400B6678F /* AppDelegate.swift */; };
@@ -17,7 +18,6 @@
 		044AB0291D8DFDC600B6678F /* arcanaData.txt in Resources */ = {isa = PBXBuildFile; fileRef = 044AB0261D8DFDC600B6678F /* arcanaData.txt */; };
 		044AB02A1D8DFDC600B6678F /* ArcanaDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044AB0271D8DFDC600B6678F /* ArcanaDatabase.swift */; };
 		044AB02B1D8DFDC600B6678F /* GlobalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044AB0281D8DFDC600B6678F /* GlobalConstants.swift */; };
-		044E07061DF2B90500A187D6 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044E07051DF2B90500A187D6 /* Upload.swift */; };
 		04A001B21DFA6BEB00C9A967 /* Weapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A001B11DFA6BEB00C9A967 /* Weapon.swift */; };
 		04A001B41DFA742700C9A967 /* Affiliation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A001B31DFA742700C9A967 /* Affiliation.swift */; };
 		04C0FCEC1DF5270200F434F8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04C0FCEB1DF5270200F434F8 /* GoogleService-Info.plist */; };
@@ -39,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		040454921DFB563300A1F74E /* Ability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ability.swift; sourceTree = "<group>"; };
 		0448942D1DF7835900963146 /* UpdateImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateImages.swift; sourceTree = "<group>"; };
 		044894351DF7F4F700963146 /* ArcanaData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArcanaData.swift; sourceTree = "<group>"; };
 		044AB0111D8DFD6400B6678F /* ArcanaDatabase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArcanaDatabase.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,7 +52,6 @@
 		044AB0261D8DFDC600B6678F /* arcanaData.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = arcanaData.txt; sourceTree = "<group>"; };
 		044AB0271D8DFDC600B6678F /* ArcanaDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArcanaDatabase.swift; sourceTree = "<group>"; };
 		044AB0281D8DFDC600B6678F /* GlobalConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalConstants.swift; sourceTree = "<group>"; };
-		044E07051DF2B90500A187D6 /* Upload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		0499C9C41D90894E00552175 /* ArcanaDatabase.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ArcanaDatabase.entitlements; sourceTree = "<group>"; };
 		04A001B11DFA6BEB00C9A967 /* Weapon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weapon.swift; sourceTree = "<group>"; };
 		04A001B31DFA742700C9A967 /* Affiliation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Affiliation.swift; sourceTree = "<group>"; };
@@ -117,8 +117,8 @@
 				044894351DF7F4F700963146 /* ArcanaData.swift */,
 				044AB0271D8DFDC600B6678F /* ArcanaDatabase.swift */,
 				0448942D1DF7835900963146 /* UpdateImages.swift */,
+				040454921DFB563300A1F74E /* Ability.swift */,
 				044AB0281D8DFDC600B6678F /* GlobalConstants.swift */,
-				044E07051DF2B90500A187D6 /* Upload.swift */,
 				044AB0141D8DFD6400B6678F /* AppDelegate.swift */,
 				04F243B51DF8C65D00BC48D5 /* Tavern.swift */,
 				04A001B31DFA742700C9A967 /* Affiliation.swift */,
@@ -375,7 +375,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				044E07061DF2B90500A187D6 /* Upload.swift in Sources */,
 				044AB0171D8DFD6400B6678F /* ViewController.swift in Sources */,
 				044AB0151D8DFD6400B6678F /* AppDelegate.swift in Sources */,
 				044894361DF7F4F700963146 /* ArcanaData.swift in Sources */,
@@ -385,6 +384,7 @@
 				04A001B41DFA742700C9A967 /* Affiliation.swift in Sources */,
 				04F3CD8B1DA38D2C0026D5AF /* Arcana.swift in Sources */,
 				0448942E1DF7835900963146 /* UpdateImages.swift in Sources */,
+				040454931DFB563300A1F74E /* Ability.swift in Sources */,
 				04F243B61DF8C65D00BC48D5 /* Tavern.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
