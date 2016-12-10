@@ -41,7 +41,7 @@ class ArcanaDatabaseTests: XCTestCase {
         
         let testString = "3部主人公フェス、3部湖都ガチャ"
 
-        let answer = "호수도시2"
+        let answer = "호수도시 3부"
         let result = test.getTavern(testString)
         
         XCTAssert(answer == result, "Got \(result) instead of \(answer)")

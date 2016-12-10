@@ -241,7 +241,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                         let attribute = link.text!
                         
                         if index == 0 {
-                            self.dict.updateValue(getWeapon(attribute.trimmingCharacters(in: .whitespacesAndNewlines)), forKey: "weapon")
+                            self.dict.updateValue(getWeaponJPKR(string: attribute.trimmingCharacters(in: .whitespacesAndNewlines)), forKey: "weapon")
                         }
                         else {
                             break
@@ -1917,6 +1917,8 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         login()
+        updateAbility(ability: Forest())
+        
 //        updateMainImage(uid: "-KUy0e9llRNn-VrXJInw")
 //        addNumberOfLikes()
         nameField.delegate = self

@@ -7,28 +7,146 @@
 //
 import Firebase
 
-
-
-func updateAbility(ability: String) {
+enum AbilityType {
+    case Ability
+    case Kizuna
+}
+class Ability {
     
-    let ref = FIREBASE_REF.child("arcana")
-    ref.observeSingleEvent(of: .value, with: { snapshot in
+    private let KR: String
+    private let EN: String
+    
+    init(kr: String, en: String) {
+        self.KR = kr
+        self.EN = en
+
+    }
+    
+    func getKR() -> String {
+        return KR
+    }
+    
+    func getEN() -> String {
+        return EN
+    }
+    
+
+    
+    
+}
+
+class Gold: Ability {
+    init() {
+        super.init(kr: "골드", en: "gold")
+    }
+}
+
+class Experience: Ability {
+    init() {
+        super.init(kr: "경험치", en: "exp")
+    }
+}
+
+// 지형 특효
+class WasteLand: Ability {
+    init() {
+        super.init(kr: "황무지", en: "wastelands")
+    }
+}
+
+class Forest: Ability {
+    init() {
+        super.init(kr: "숲", en: "forest")
+    }
+}
+
+class Cavern: Ability {
+    init() {
+        super.init(kr: "덩굴", en: "cavern")
+    }
+}
+
+class Desert: Ability {
+    init() {
+        super.init(kr: "사막", en: "desert")
+    }
+}
+
+class Snow: Ability {
+    init() {
+        super.init(kr: "설산", en: "snow")
+    }
+}
+
+class Urban: Ability {
+    init() {
+        super.init(kr: "도시", en: "urban")
+    }
+}
+
+class Water: Ability {
+    init() {
+        super.init(kr: "해변", en: "water")
+    }
+}
+
+class Night: Ability {
+    init() {
+        super.init(kr: "야간", en: "night")
+    }
+}
+// Checks both abilities and kizuna to see if arcana includes this ability.
+func updateAbility(ability: Ability) {
+    
+    
+    let arcanaRef = FIREBASE_REF.child("arcana")
+    let abilityEN = ability.getEN()
+//    let abilityType = ability.getType()
+    
+    print("Looking up arcana with \(ability.getKR())...")
+    
+    
+    arcanaRef.observeSingleEvent(of: .value, with: { snapshot in
         
-        for arcana in snapshot.children {
-            if let ability1 = ((arcana as! FIRDataSnapshot).value as! NSDictionary)["abilityDesc1"] as? String {
+        for child in snapshot.children {
+            
+            let arcana = (child as! FIRDataSnapshot).value as! NSDictionary
+            
+            let uid = arcana["uid"] as! String
+            
+            if let ability1 = arcana["abilityDesc1"] as? String {
                 
-                
+                if ability1.contains(ability.getKR()) {
+                    
+                    let abilityRef = FIREBASE_REF.child(abilityEN + "Ability/" + uid)
+                    abilityRef.setValue(true)
+                    
+                }
             }
             
-            if let ability2 = ((arcana as! FIRDataSnapshot).value as! NSDictionary)["abilityDesc2"] as? String {
+            if let ability2 = arcana["abilityDesc2"] as? String {
                 
+                if ability2.contains(ability.getKR()) {
+                    
+                    let abilityRef = FIREBASE_REF.child(abilityEN + "Ability/" + uid)
+                    abilityRef.setValue(true)
+                    
+                }
             }
 
-            if let kizuna = ((arcana as! FIRDataSnapshot).value as! NSDictionary)["kizunaDesc"] as? String {
+            if let kizuna = arcana["kizunaDesc"] as? String {
                 
+                if kizuna.contains(ability.getKR()) {
+                    
+                    let abilityRef = FIREBASE_REF.child(abilityEN + "Kizuna/" + uid)
+                    abilityRef.setValue(true)
+                    
+                }
             }
             
         }
+        
+        print("Finished finding arcana with \(ability.getKR())")
     })
     
 }
