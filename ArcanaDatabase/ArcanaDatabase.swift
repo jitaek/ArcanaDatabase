@@ -1917,19 +1917,12 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         login()
-        updateAbility(ability: Forest())
-        
-//        updateMainImage(uid: "-KUy0e9llRNn-VrXJInw")
-//        addNumberOfLikes()
+//        updateAbility(ability: Urban())
+        updateAbility(ability: StunImmune(), conditions: true)
         nameField.delegate = self
         imageField.delegate = self
         iconField.delegate = self
-//        resetViews()
-//        findAbility()
-//        cleanIDS()
-//        retrieveURLS()
-//        downloadArcana()
-//        downloadArcana(549)
+
 
     }
 
