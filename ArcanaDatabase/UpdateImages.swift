@@ -12,7 +12,8 @@ import Firebase
 // Update both images given UID. If one of the URLS are empty, don't update that one only.
 
 func downloadImages(uid: String, imageURL: String, iconURL: String) {
-        
+    
+    
     let ref = FIREBASE_REF.child("arcana/\(uid)")
 
     var images = [String : String]()

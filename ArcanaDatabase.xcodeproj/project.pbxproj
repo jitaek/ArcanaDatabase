@@ -20,7 +20,9 @@
 		044AB02B1D8DFDC600B6678F /* GlobalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044AB0281D8DFDC600B6678F /* GlobalConstants.swift */; };
 		04A001B21DFA6BEB00C9A967 /* Weapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A001B11DFA6BEB00C9A967 /* Weapon.swift */; };
 		04A001B41DFA742700C9A967 /* Affiliation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A001B31DFA742700C9A967 /* Affiliation.swift */; };
+		04B3DC821E66300E00430120 /* Rarity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B3DC811E66300E00430120 /* Rarity.swift */; };
 		04C0FCEC1DF5270200F434F8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04C0FCEB1DF5270200F434F8 /* GoogleService-Info.plist */; };
+		04D29D821E56667500F7264C /* UpdateTranslations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D29D811E56667500F7264C /* UpdateTranslations.swift */; };
 		04F243AA1DF8BBB600BC48D5 /* ArcanaDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F243A91DF8BBB600BC48D5 /* ArcanaDatabaseTests.swift */; };
 		04F243B61DF8C65D00BC48D5 /* Tavern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F243B51DF8C65D00BC48D5 /* Tavern.swift */; };
 		04F3CD8B1DA38D2C0026D5AF /* Arcana.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F3CD8A1DA38D2C0026D5AF /* Arcana.swift */; };
@@ -55,7 +57,9 @@
 		0499C9C41D90894E00552175 /* ArcanaDatabase.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ArcanaDatabase.entitlements; sourceTree = "<group>"; };
 		04A001B11DFA6BEB00C9A967 /* Weapon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weapon.swift; sourceTree = "<group>"; };
 		04A001B31DFA742700C9A967 /* Affiliation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Affiliation.swift; sourceTree = "<group>"; };
+		04B3DC811E66300E00430120 /* Rarity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rarity.swift; sourceTree = "<group>"; };
 		04C0FCEB1DF5270200F434F8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		04D29D811E56667500F7264C /* UpdateTranslations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateTranslations.swift; sourceTree = "<group>"; };
 		04F243A71DF8BBB600BC48D5 /* ArcanaDatabaseTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ArcanaDatabaseTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F243A91DF8BBB600BC48D5 /* ArcanaDatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcanaDatabaseTests.swift; sourceTree = "<group>"; };
 		04F243AB1DF8BBB600BC48D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -116,7 +120,9 @@
 				044AB0261D8DFDC600B6678F /* arcanaData.txt */,
 				044894351DF7F4F700963146 /* ArcanaData.swift */,
 				044AB0271D8DFDC600B6678F /* ArcanaDatabase.swift */,
+				04B3DC811E66300E00430120 /* Rarity.swift */,
 				0448942D1DF7835900963146 /* UpdateImages.swift */,
+				04D29D811E56667500F7264C /* UpdateTranslations.swift */,
 				040454921DFB563300A1F74E /* Ability.swift */,
 				044AB0281D8DFDC600B6678F /* GlobalConstants.swift */,
 				044AB0141D8DFD6400B6678F /* AppDelegate.swift */,
@@ -383,9 +389,11 @@
 				044AB02A1D8DFDC600B6678F /* ArcanaDatabase.swift in Sources */,
 				04A001B41DFA742700C9A967 /* Affiliation.swift in Sources */,
 				04F3CD8B1DA38D2C0026D5AF /* Arcana.swift in Sources */,
+				04D29D821E56667500F7264C /* UpdateTranslations.swift in Sources */,
 				0448942E1DF7835900963146 /* UpdateImages.swift in Sources */,
 				040454931DFB563300A1F74E /* Ability.swift in Sources */,
 				04F243B61DF8C65D00BC48D5 /* Tavern.swift in Sources */,
+				04B3DC821E66300E00430120 /* Rarity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

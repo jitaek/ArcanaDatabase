@@ -832,10 +832,10 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             self.download.notify(queue: DispatchQueue.main, execute: {
                 print("Finished translating.")
                 
-                self.loop.notify(queue: DispatchQueue.main, execute: { [unowned self] in
+                self.loop.notify(queue: DispatchQueue.main, execute: { 
                     print("Finished uploading.")
 //                    self.downloadIcon(_: self)
-                    downloadImages(uid: self.dict["uid"]!, imageURL: self.imageField.text!, iconURL: self.iconField.text!)
+//                    downloadImages(nameJP: self.dict["nameJP"]!, imageURL: self.imageField.text!, iconURL: self.iconField.text!)
                     
                 })
             })
@@ -1003,15 +1003,17 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
 
                         // get rid of &quot; and &lt &gt;
                         var t = translatedText.replacingOccurrences(of: "&quot;", with: " ")
-//                        t = t.replacingOccurrences(of: "&lt;", with: "")
-//                        t = t.replacingOccurrences(of: "&gt;", with: "")
+                        t = t.replacingOccurrences(of: "&lt;", with: "<")
+                        t = t.replacingOccurrences(of: "&gt;", with: ">")
                         // some have quotes at start, so remove whitespace
                         t = t.trimmingCharacters(in: .whitespacesAndNewlines)
                         // remove double spaces
+                        t = t.replacingOccurrences(of: "◆ ", with: "")
                         t = t.replacingOccurrences(of: "  ", with: " ")
                         // remove space in front of %
                         t = t.replacingOccurrences(of: " %", with: "%")
                         t = t.replacingOccurrences(of: "副都", with: "부도")
+                        t = t.replacingOccurrences(of: "】", with: "]")
 //                        if forKey == "nameKR" {
 //                            t = t.replacingOccurrences(of: " ", with: "")
 //                        }
@@ -1076,16 +1078,19 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                     self.dict["affiliation"] = ""
                 }
                 // TODO: Change base case to 1 skill 0 ability...
-                guard let nKR = self.dict["nameKR"], let nJP = self.dict["nameJP"], let r = self.dict["rarity"], let g = self.dict["group"], let t = self.dict["tavern"], let a = self.dict["affiliation"], let c = self.dict["cost"], let w = self.dict["weapon"], let kN = self.dict["kizunaName"], let kC = self.dict["kizunaCost"], let kD = self.dict["kizunaDesc"], let sC = self.dict["skillCount"], let sN1 = self.dict["skillName1"], let sM1 = self.dict["skillMana1"], let sD1 = self.dict["skillDesc1"] else {
+                guard let nKR = self.dict["nameKR"], let nJP = self.dict["nameJP"], let r = self.dict["rarity"], let g = self.dict["group"], let t = self.dict["tavern"], let a = self.dict["affiliation"], let c = self.dict["cost"], let w = self.dict["weapon"], let kN = self.dict["kizunaName"], var kC = self.dict["kizunaCost"], let kD = self.dict["kizunaDesc"], let sC = self.dict["skillCount"], let sN1 = self.dict["skillName1"], let sM1 = self.dict["skillMana1"], let sD1 = self.dict["skillDesc1"] else {
                     
                     
                     for (key, _) in self.dict {
                         check.append(key)
                     }
                     
-                    
                     print("ARCANA DICIONARY VALUE IS NIL")
                     return
+                }
+                
+                if kC == "" {
+                    kC = kC.fixEmptyString(rarity: r)
                 }
                 
                 let checkedArray = check.sorted(by: {$0 < $1})
@@ -1294,8 +1299,13 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                     let abilityRef = FIREBASE_REF.child("apRecoverAbility/\(id)")
                     abilityRef.setValue(true)
                 }
-                
-                
+                if aD1.contains("WAVE가 시작 할 때마다") {
+                    if (aD1.contains("회복한다") || aD1.contains("회복하고")) && (aD1.contains("낮은 동료") || aD1.contains("가까이") || aD1.contains("아군 전체")) {
+                        let abilityRef = FIREBASE_REF.child("partyHealAbility").child(id)
+                        abilityRef.setValue(true)
+                    }
+
+                }
             }
             if let aD2 = self.dict["abilityDesc2"] {
                 if aD2.contains("서브") && !aD2.contains("마나를") {
@@ -1333,6 +1343,13 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                 if aD2.contains("AP") {
                     let abilityRef = FIREBASE_REF.child("apRecoverAbility/\(id)")
                     abilityRef.setValue(true)
+                }
+                if aD2.contains("WAVE가 시작 할 때마다") {
+                    if (aD2.contains("회복한다") || aD2.contains("회복하고")) && (aD2.contains("낮은 동료") || aD2.contains("가까이") || aD2.contains("아군 전체")) {
+                        let abilityRef = FIREBASE_REF.child("partyHealAbility").child(id)
+                        abilityRef.setValue(true)
+                    }
+                    
                 }
             }
             if let k = self.dict["kizunaDesc"] {
@@ -1380,6 +1397,13 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                 if (k.contains("슬로우") || k.contains("스러운")) && (k.contains("않는다") || k.contains("안고")) {
                     let kizunaRef = FIREBASE_REF.child("slowImmuneKizuna/\(id)")
                     kizunaRef.setValue(true)
+                }
+                if k.contains("WAVE가 시작 할 때마다") {
+                    if (k.contains("회복한다") || k.contains("회복하고")) && (k.contains("낮은 동료") || k.contains("가까이") || k.contains("아군 전체")) {
+                        let kizunaRef = FIREBASE_REF.child("partyHealKizuna").child(id)
+                        kizunaRef.setValue(true)
+                    }
+                    
                 }
             }
         }
@@ -1917,8 +1941,10 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         login()
-//        updateAbility(ability: Urban())
-        updateAbility(ability: StunImmune(), conditions: true)
+//        translateWaveUp()
+//        moveAbilityRefs()
+//        updateAbility(ability: PartyHeal())
+//        updateAbility(ability: StunImmune(), conditions: true)
         nameField.delegate = self
         imageField.delegate = self
         iconField.delegate = self
@@ -1926,6 +1952,19 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
 
     }
 
+    func moveAbilityRefs() {
+        let ref = FIREBASE_REF
+        ref.observe(.childAdded, with: { snapshot in
+            if snapshot.key.contains("Ability") || snapshot.key.contains("Kizuna") {
+                
+                let newAbilityDict: [String : Any] = [snapshot.key : snapshot.value!]
+                let newAbilityRef = ref.child("ability")
+                
+                newAbilityRef.updateChildValues(newAbilityDict)
+                
+            }
+        })
+    }
 }
 
 extension String {
