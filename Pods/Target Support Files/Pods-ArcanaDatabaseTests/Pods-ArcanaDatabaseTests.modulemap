@@ -1,6 +1,0 @@
-framework module Pods_ArcanaDatabaseTests {
-  umbrella header "Pods-ArcanaDatabaseTests-umbrella.h"
-
-  export *
-  module * { export * }
-}
