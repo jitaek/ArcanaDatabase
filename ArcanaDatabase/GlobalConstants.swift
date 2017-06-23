@@ -13,8 +13,8 @@ import AlamofireImage
 
 let API_KEY = "AIzaSyBD9eX7ABB0Xu1N6CnSdKL-bnsNF5WgLtc"
 
-let FIREBASE_REF = FIRDatabase.database().reference()
-let STORAGE_REF = FIRStorage.storage().reference()
+let FIREBASE_REF = Database.database().reference()
+let STORAGE_REF = Storage.storage().reference()
 
 //let example = "https://xn--eckfza0gxcvmna6c.gamerch.com/年代記の剣士リヴェラ"
 //let baseURL = "https://xn--eckfza0gxcvmna6c.gamerch.com/"

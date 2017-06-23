@@ -58,7 +58,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                 print(trim)
                 if let doc = Kanna.HTML(html: trim, encoding: String.Encoding.utf8) {
                     for tavern in doc.xpath(".//a[@href]") {
-                        print(tavern.text)
+                        print(tavern.text!)
                     }
 
                 }
@@ -720,7 +720,8 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             if let imageURL = arcana!.imageURL {
                 
                 let imageCheckRef = STORAGE_REF.child("image/arcana/\(uid)/main.jpg")
-                imageCheckRef.metadata { (metadata, error) -> Void in
+                imageCheckRef.getMetadata(completion: { (metadata, error) in
+                    
                     if (error == nil) {
                         // Uh-oh, an error occurred!
 
@@ -735,8 +736,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                                 // upload to firebase storage.
                                 
                                 let arcanaImageRef = STORAGE_REF.child("image/arcana/\(uid)/main.jpg")
-                                
-                                arcanaImageRef.put(NSData(data: data) as Data, metadata: nil) { metadata, error in
+                                arcanaImageRef.putData(NSData(data: data) as Data, metadata: nil, completion: { (metadata, error) in
                                     if (error != nil) {
                                         print("ERROR OCCURED WHILE UPLOADING MAIN")
                                         // Uh-oh, an error occurred!
@@ -745,7 +745,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                                         print("UPLOADED MAIN FOR \(arcana!.nameKR)")
                                         //let downloadURL = metadata!.downloadURL
                                     }
-                                }
+                                })
                                 
                             }
                             
@@ -756,7 +756,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                         // Metadata now contains the metadata for 'images/forest.jpg'
                         print("IMAGE EXISTS FOR \(arcana!.nameKR)")
                     }
-                }
+                })
                 
             }
             
@@ -786,7 +786,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             var exists = false
             
             for i in snapshot.children {
-                let s = ((i as! FIRDataSnapshot).value as! NSDictionary)["nameJP"] as! String
+                let s = ((i as! DataSnapshot).value as! NSDictionary)["nameJP"] as! String
                 if s == name {
                     exists = true
                 }
@@ -919,7 +919,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             var exists = false
             
             for arcana in snapshot.children {
-                if self.urls[index].contains(((arcana as! FIRDataSnapshot).value as! NSDictionary)["nameJP"] as! String) {
+                if self.urls[index].contains(((arcana as! DataSnapshot).value as! NSDictionary)["nameJP"] as! String) {
                     exists = true
                 }
                 
@@ -1000,11 +1000,10 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                     
                     if let translatedText = json["data"]["translations"][0]["translatedText"].string {
                         
-
                         // get rid of &quot; and &lt &gt;
                         var t = translatedText.replacingOccurrences(of: "&quot;", with: " ")
-                        t = t.replacingOccurrences(of: "&lt;", with: "<")
-                        t = t.replacingOccurrences(of: "&gt;", with: ">")
+                        t = t.replacingOccurrences(of: "&lt;", with: "")
+                        t = t.replacingOccurrences(of: "&gt;", with: "")
                         // some have quotes at start, so remove whitespace
                         t = t.trimmingCharacters(in: .whitespacesAndNewlines)
                         // remove double spaces
@@ -1012,11 +1011,11 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                         t = t.replacingOccurrences(of: "  ", with: " ")
                         // remove space in front of %
                         t = t.replacingOccurrences(of: " %", with: "%")
+                        t = t.replacingOccurrences(of: " )", with: ")")
                         t = t.replacingOccurrences(of: "副都", with: "부도")
+                        t = t.replacingOccurrences(of: "WAVE", with: "웨이브")
+                        t = t.replacingOccurrences(of: "進むたび", with: "진행될때마다")
                         t = t.replacingOccurrences(of: "】", with: "]")
-//                        if forKey == "nameKR" {
-//                            t = t.replacingOccurrences(of: " ", with: "")
-//                        }
                         
                         self.dict.updateValue(t, forKey: forKey)
                         //self.dict.updateValue(String(htmlEncodedString: final), forKey: key)
@@ -1051,7 +1050,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             var exists = false
             
             for i in snapshot.children {
-                let s = ((i as! FIRDataSnapshot).value as! NSDictionary)["nameJP"] as! String
+                let s = ((i as! DataSnapshot).value as! NSDictionary)["nameJP"] as! String
                 let d = self.dict["nameJP"]!
                 if s == d {
                     exists = true
@@ -1106,9 +1105,10 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                 if t != "" {
                     
                     let tavernRef = FIREBASE_REF.child("tavern/\(self.getTavernRef(tavern: t))/\(id)")
-                    tavernRef.setValue(true, withCompletionBlock: { completion in
-                        print("DONE")
+                    tavernRef.setValue(true, withCompletionBlock: { (error, reference) in
+                        
                     })
+                    
                 }
                 
                 // name-uid ref, for easy search purposes
@@ -1123,7 +1123,8 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                 // check for ability types
                 self.findAbilities()
                 
-                ref.updateChildValues(arcanaRef, withCompletionBlock: { completion in
+                ref.updateChildValues(arcanaRef, withCompletionBlock: { (error, reference) in
+                    
                     print("UPLOADED \(nKR)")
                     downloadImages(nameJP: self.nameField.text!, imageURL: self.imageField.text!, iconURL: self.iconField.text!)
                     // check for chainStory, chainStone, dateAdded
@@ -1149,32 +1150,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                             
                         }
                     }
-                    // Check if arcana was in file. If yes, get nicknames, iconURL
                     
-                    if let nnKR = self.dict["nickKR"], let nnJP = self.dict["nickJP"], let iconURL = self.dict["iconURL"] {
-                        let nickNameRef = FIREBASE_REF.child("arcana/\(id)")
-                        let nickNameAndIconRef = ["nickNameKR" : "\(nnKR)", "nickNameJP" : "\(nnJP)", "iconURL" : "\(iconURL)"]
-                        //dispatch_group_enter(self.loop)
-                        nickNameRef.updateChildValues(nickNameAndIconRef, withCompletionBlock: { completion in
-                            
-                            print("uploaded nickname and iconurl")
-//                            self.loop.leave()
-                        })
-                    }
-                        
-                    else {
-//                        print("COULD NOT FIND ARCANA IN FILE. NO NICKNAME AND ICONURL")
-//                        self.loop.leave()
-                    }
-//                    self.loop.notify(queue: DispatchQueue.main, execute: { // Calls the given block when all blocks are finished in the group.
-//                        print("notified")
-        //                dispatch_group_wait(self.group, 3000)
-                        
-                        // Check if arcana has 1 ability
-                        
-                        
-                        
-                        
                         // Check if arcana has 2 abilities
                         if r.contains("5") || r.contains("4") {
                             guard let aN2 = self.dict["abilityName2"], let aD2 = self.dict["abilityDesc2"] else {
@@ -1191,9 +1167,8 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                             let abilityRef = ["abilityName2" : "\(aN2)", "abilityDesc2" : "\(aD2)"]
                             self.loop.enter()
                             // Upload Ability 2
-                            newArcanaRef.updateChildValues(abilityRef, withCompletionBlock: { completion in
+                            newArcanaRef.updateChildValues(abilityRef, withCompletionBlock: { (error, reference) in
                                 self.loop.leave()
-                                
                             })
                             
                             // Check if arcana has at least 2 skills
@@ -1203,19 +1178,18 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                                 case "2":
                                     
                                     let skill2 = ["skillName2" : "\(sN2)", "skillMana2" : "\(sM2)", "skillDesc2" : "\(sD2)"]
-                                    newArcanaRef.updateChildValues(skill2, withCompletionBlock: { completion in
+                                    newArcanaRef.updateChildValues(skill2, withCompletionBlock: { (error, reference) in
                                         self.loop.leave()
-                                        
                                     })
                                     
                                 case "3":
                                     
                                     if let sN2 = self.dict["skillName2"], let sM2 = self.dict["skillMana2"], let sD2 = self.dict["skillDesc2"], let sN3 = self.dict["skillName3"], let sM3 = self.dict["skillMana3"], let sD3 = self.dict["skillDesc3"] {
                                         let skill3 = ["skillName2" : "\(sN2)", "skillMana2" : "\(sM2)", "skillDesc2" : "\(sD2)", "skillName3" : "\(sN3)", "skillMana3" : "\(sM3)", "skillDesc3" : "\(sD3)"]
-                                        newArcanaRef.updateChildValues(skill3, withCompletionBlock: { completion in
+                                        newArcanaRef.updateChildValues(skill3, withCompletionBlock: { (error, reference) in
                                             self.loop.leave()
-                                            
                                         })
+                                        
                                     }
                                     
                                 default:
@@ -1791,8 +1765,8 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                     // upload to firebase storage.
                     
                     let ref = STORAGE_REF.child("image/arcana/\(uid)/main.jpg")
-                    
-                    ref.put(NSData(data: data) as Data, metadata: nil) { metadata, error in
+                    ref.putData(NSData(data: data) as Data, metadata: nil, completion: { (metadata, error) in
+                        
                         if (error != nil) {
                             print("ERROR OCCURED WHILE UPLOADING IMAGE)")
                             // Uh-oh, an error occurred!
@@ -1802,7 +1776,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
                             
                             //let downloadURL = metadata!.downloadURL
                         }
-                    }
+                    })
                     
                 }
                 
@@ -1908,7 +1882,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
     
     func login() {
     
-        FIRAuth.auth()?.signIn(withEmail: "test@gmail.com", password: "test123") { (user, error) in
+        Auth.auth().signIn(withEmail: "test@gmail.com", password: "test123") { (user, error) in
             if error != nil {
                 print("could not login")
             }
@@ -1970,20 +1944,6 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
 extension String {
     func indexOf(_ string: String) -> String.Index? {
         return range(of: string, options: .literal, range: nil, locale: nil)?.lowerBound
-    }
-    
-    init?(htmlEncodedString: String) {
-        do {
-            let encodedData = htmlEncodedString.data(using: String.Encoding.utf8)!
-            let attributedOptions : [String: AnyObject] = [
-                NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType as AnyObject,
-                NSCharacterEncodingDocumentAttribute: String.Encoding.utf8 as AnyObject
-            ]
-            let attributedString = try NSAttributedString(data: encodedData, options: attributedOptions, documentAttributes: nil)
-            self.init(attributedString.string)
-        } catch {
-            fatalError("Unhandled error: \(error)")
-        }
     }
     
     func deleteHTMLTag(_ tag:String) -> String {

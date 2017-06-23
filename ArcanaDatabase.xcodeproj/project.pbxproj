@@ -27,7 +27,6 @@
 		04F243B61DF8C65D00BC48D5 /* Tavern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F243B51DF8C65D00BC48D5 /* Tavern.swift */; };
 		04F3CD8B1DA38D2C0026D5AF /* Arcana.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F3CD8A1DA38D2C0026D5AF /* Arcana.swift */; };
 		2D32BB44290516072E6B516B /* Pods_ArcanaDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E09681E1836C3DB035C4AE7 /* Pods_ArcanaDatabase.framework */; };
-		F0769E80FC77B0CC950A3A39 /* Pods_ArcanaDatabaseTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8038754D1D0FCFA36785498E /* Pods_ArcanaDatabaseTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,10 +65,8 @@
 		04F243B51DF8C65D00BC48D5 /* Tavern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tavern.swift; sourceTree = "<group>"; };
 		04F3CD8A1DA38D2C0026D5AF /* Arcana.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arcana.swift; sourceTree = "<group>"; };
 		0EB4105AF6E80ACF6446C865 /* Pods-ArcanaDatabase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArcanaDatabase.release.xcconfig"; path = "Pods/Target Support Files/Pods-ArcanaDatabase/Pods-ArcanaDatabase.release.xcconfig"; sourceTree = "<group>"; };
-		18C1C6343E1BF50E303D6136 /* Pods-ArcanaDatabaseTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArcanaDatabaseTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ArcanaDatabaseTests/Pods-ArcanaDatabaseTests.release.xcconfig"; sourceTree = "<group>"; };
 		1E09681E1836C3DB035C4AE7 /* Pods_ArcanaDatabase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ArcanaDatabase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		30413E90C0939B58766D250D /* Pods-ArcanaDatabase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArcanaDatabase.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ArcanaDatabase/Pods-ArcanaDatabase.debug.xcconfig"; sourceTree = "<group>"; };
-		5A36E42A22248D365D85EF92 /* Pods-ArcanaDatabaseTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArcanaDatabaseTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ArcanaDatabaseTests/Pods-ArcanaDatabaseTests.debug.xcconfig"; sourceTree = "<group>"; };
 		8038754D1D0FCFA36785498E /* Pods_ArcanaDatabaseTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ArcanaDatabaseTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -86,7 +83,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F0769E80FC77B0CC950A3A39 /* Pods_ArcanaDatabaseTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,8 +159,6 @@
 			children = (
 				30413E90C0939B58766D250D /* Pods-ArcanaDatabase.debug.xcconfig */,
 				0EB4105AF6E80ACF6446C865 /* Pods-ArcanaDatabase.release.xcconfig */,
-				5A36E42A22248D365D85EF92 /* Pods-ArcanaDatabaseTests.debug.xcconfig */,
-				18C1C6343E1BF50E303D6136 /* Pods-ArcanaDatabaseTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -196,12 +190,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 04F243B01DF8BBB600BC48D5 /* Build configuration list for PBXNativeTarget "ArcanaDatabaseTests" */;
 			buildPhases = (
-				D0266312D0F5031A6D35053F /* [CP] Check Pods Manifest.lock */,
 				04F243A31DF8BBB600BC48D5 /* Sources */,
 				04F243A41DF8BBB600BC48D5 /* Frameworks */,
 				04F243A51DF8BBB600BC48D5 /* Resources */,
-				0C49B34EDFACB923B0EFC553 /* [CP] Embed Pods Frameworks */,
-				C1C2B2266DC80AA81C905DA8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -220,13 +211,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0810;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Jitae Kim";
 				TargetAttributes = {
 					044AB0101D8DFD6400B6678F = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 3NP653TDUD;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Keychain = {
@@ -237,6 +228,7 @@
 					04F243A61DF8BBB600BC48D5 = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = 3NP653TDUD;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 044AB0101D8DFD6400B6678F;
 					};
@@ -284,21 +276,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0C49B34EDFACB923B0EFC553 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ArcanaDatabaseTests/Pods-ArcanaDatabaseTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		56881639EA85CA203E0AB7C5 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -329,36 +306,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ArcanaDatabase/Pods-ArcanaDatabase-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C1C2B2266DC80AA81C905DA8 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ArcanaDatabaseTests/Pods-ArcanaDatabaseTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D0266312D0F5031A6D35053F /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 		D0F16CA0C27197ED348F33E2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -371,7 +318,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -444,7 +391,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -452,7 +401,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -482,6 +435,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -494,7 +448,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -502,7 +458,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -524,6 +484,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -542,7 +503,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jk.ArcanaDatabase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -560,13 +522,13 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jk.ArcanaDatabase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
 		04F243AE1DF8BBB600BC48D5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5A36E42A22248D365D85EF92 /* Pods-ArcanaDatabaseTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 3NP653TDUD;
@@ -575,14 +537,14 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jk.ArcanaDatabaseTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ArcanaDatabase.app/ArcanaDatabase";
 			};
 			name = Debug;
 		};
 		04F243AF1DF8BBB600BC48D5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18C1C6343E1BF50E303D6136 /* Pods-ArcanaDatabaseTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 3NP653TDUD;
@@ -591,7 +553,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jk.ArcanaDatabaseTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ArcanaDatabase.app/ArcanaDatabase";
 			};
 			name = Release;

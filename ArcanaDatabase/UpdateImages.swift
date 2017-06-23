@@ -46,16 +46,14 @@ func downloadImages(uid: String, imageURL: String, iconURL: String) {
                     // upload to firebase storage.
                     
                     let arcanaImageRef = STORAGE_REF.child("image/arcana/\(uid)/\(image).jpg")
-                    
-                    arcanaImageRef.put(NSData(data: data) as Data, metadata: nil) { metadata, error in
+                    arcanaImageRef.putData(NSData(data: data) as Data, metadata: nil, completion: { (metadata, error) in
                         if (error != nil) {
                             print("ERROR OCCURED WHILE UPLOADING \(image)")
                         } else {
                             print("UPLOADED \(image) FOR \(uid)")
                             
                         }
-                    }
-                    
+                    })
                 }
                 
             })
@@ -73,7 +71,7 @@ func downloadImages(nameJP: String, imageURL: String, iconURL: String) {
     ref.queryLimited(toLast: 50).observeSingleEvent(of: .value, with: { snapshot in
         print("Searching for arcana uid...")
         for i in snapshot.children.reversed() {
-            let arcana = Arcana(snapshot: i as! FIRDataSnapshot)
+            let arcana = Arcana(snapshot: i as! DataSnapshot)
             let uid = arcana!.uid
             if arcana!.nameJP.contains(nameJP) {
                 

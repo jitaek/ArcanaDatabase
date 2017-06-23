@@ -242,7 +242,7 @@ func updateAbility(ability: Ability) {
         
         for child in snapshot.children {
             
-            let arcana = (child as! FIRDataSnapshot).value as! NSDictionary
+            let arcana = (child as! DataSnapshot).value as! NSDictionary
             
             let uid = arcana["uid"] as! String
             
@@ -324,7 +324,7 @@ func updateAbility(ability: Ability, conditions: Bool) {
         
         for child in snapshot.children {
             
-            let arcana = (child as! FIRDataSnapshot).value as! NSDictionary
+            let arcana = (child as! DataSnapshot).value as! NSDictionary
             
             let uid = arcana["uid"] as! String
             

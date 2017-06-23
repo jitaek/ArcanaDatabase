@@ -5,7 +5,6 @@
 //  Created by Jitae Kim on 8/25/16.
 //  Copyright © 2016 Jitae Kim. All rights reserved.
 //
-
 import Firebase
 
 struct Arcana {
@@ -16,7 +15,7 @@ struct Arcana {
     var iconURL: String?
     var imageURL: String?
     
-    init?(snapshot: FIRDataSnapshot) {
+    init?(snapshot: DataSnapshot) {
         
         //        if let a = snapshot.value as? NSDictionary {
         //            let b = a["uid"] as? String
