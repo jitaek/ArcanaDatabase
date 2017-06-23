@@ -1,7 +1,4 @@
 PODS:
-  - Alamofire (4.5.0)
-  - AlamofireImage (3.2.0):
-    - Alamofire (~> 4.1)
   - Firebase (4.0.2):
     - Firebase/Core (= 4.0.2)
   - Firebase/Auth (4.0.2):
@@ -49,7 +46,6 @@ PODS:
   - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
-  - AlamofireImage (~> 3.0)
   - Firebase
   - Firebase/Auth
   - Firebase/Database
@@ -58,8 +54,6 @@ DEPENDENCIES:
   - SwiftyJSON
 
 SPEC CHECKSUMS:
-  Alamofire: f28cdffd29de33a7bfa022cbd63ae95a27fae140
-  AlamofireImage: 157ed682cc81d3b9db4fb90c1f12180ac552d93b
   Firebase: c7ad0731eab26d18a3fc547dd048b0f7cd9c63ae
   FirebaseAnalytics: 4d7040fefc3cd8b291cde35f12cf063d7963f15d
   FirebaseAuth: ebb6abcbabae00fc47446d690c19ce68d8484fde
@@ -72,6 +66,6 @@ SPEC CHECKSUMS:
   Kanna: 182789ab065e8f9a6ccc2a74ce6283d3401c0c4a
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: 17945b16a8869aa7c483063f8f2ee0584193f321
+PODFILE CHECKSUM: 18625366ab4e1349e8965ef4f55d912011afd7ae
 
 COCOAPODS: 1.2.1

@@ -8,37 +8,14 @@
 
 import UIKit
 import Firebase
-import AlamofireImage
-//import Polyglot
 
-let API_KEY = "AIzaSyBD9eX7ABB0Xu1N6CnSdKL-bnsNF5WgLtc"
+//let API_KEY = "AIzaSyBD9eX7ABB0Xu1N6CnSdKL-bnsNF5WgLtc"
 
 let FIREBASE_REF = Database.database().reference()
 let STORAGE_REF = Storage.storage().reference()
 
-//let example = "https://xn--eckfza0gxcvmna6c.gamerch.com/年代記の剣士リヴェラ"
-//let baseURL = "https://xn--eckfza0gxcvmna6c.gamerch.com/"
-//let arcanaURL = "強欲な花タチアナ"
-//
-//let encodedString = arcanaURL.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())
-//
-//let encodedURL = NSURL(string: "\(baseURL)\(encodedString!)")
-
 let SCREENWIDTH = UIScreen.main.bounds.width
 let SCREENHEIGHT = UIScreen.main.bounds.height
-
-let DOWNLOADER = ImageDownloader(
-    configuration: ImageDownloader.defaultURLSessionConfiguration(),
-    downloadPrioritization: .fifo,
-    maximumActiveDownloads: 4,
-    imageCache: AutoPurgingImageCache()
-)
-
-let IMAGECACHE = AutoPurgingImageCache(
-    memoryCapacity: 100 * 1024 * 1024,
-    preferredMemoryUsageAfterPurge: 60 * 1024 * 1024
-)
-
 
 // Colors
 let WARRIORCOLOR = UIColor(red:1.0, green:0.23, blue:0.19, alpha:1.0)
@@ -55,7 +32,49 @@ let greenColor = UIColor(red:0.3, green:0.85, blue:0.39, alpha:1.0)
 let lightGreenColor = UIColor(red:0.41, green:0.64, blue:0.51, alpha:1.0)
 let textGrayColor = UIColor(red:0.53, green:0.53, blue:0.53, alpha:1.0)
 
+let ARCANA_REF = FIREBASE_REF.child("arcana")
+let ARCANAPREVIEW_REF = FIREBASE_REF.child("arcanaPreview")
 
-
-//let TRANSLATOR = Polyglot(clientId: "ChainChronicle1126", clientSecret: "hCRxD8K8n4SkJ+m/yQtV1cFxm/JG4JfjzMFptQSBwWE=")
-
+enum ArcanaAttribute: String {
+    
+    case nameKR
+    case nicknameKR
+    case nameJP
+    case nicknameJP
+    case rarity
+    case group
+    case tavern
+    case affiliation
+    case cost
+    case weapon
+    
+    case kizunaName
+    case kizunaCost
+    case kizunaDesc
+    
+    case skillCount
+    case skillName1
+    case skillMana1
+    case skillDesc1
+    
+    case skillName2
+    case skillMana2
+    case skillDesc2
+    
+    case skillName3
+    case skillMana3
+    case skillDesc3
+    
+    case abilityName1
+    case abilityDesc1
+    
+    case abilityName2
+    case abilityDesc2
+    
+    case abilityName3
+    case abilityDesc3
+    
+    case partyAbility
+    
+    case chainStory
+}

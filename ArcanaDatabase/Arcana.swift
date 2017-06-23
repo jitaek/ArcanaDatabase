@@ -7,37 +7,40 @@
 //
 import Firebase
 
-struct Arcana {
+class ArcanaPreview {
     
-    var uid: String
-    var nameKR: String
-    var nameJP: String
-    var iconURL: String?
-    var imageURL: String?
+    private let arcanaID: String
+    private let nameKR: String
+//    private let nicknameKR: String?
+    private let nameJP: String
+//    private let nicknameJP: String?
+    private let rarity: String
+    private let group: String  // Class, 직업
+    private let weapon: String
+    private let affiliation: String // 소속
+    private let numberOfViews = 0
     
-    init?(snapshot: DataSnapshot) {
+    init?(arcanaDict: [String:String]) {
         
-        //        if let a = snapshot.value as? NSDictionary {
-        //            let b = a["uid"] as? String
-        //        }
-        guard let u = (snapshot.value as? NSDictionary)?["uid"] as? String, let nKR = (snapshot.value as? NSDictionary)?["nameKR"] as? String, let nJP = (snapshot.value as? NSDictionary)?["nameJP"] as? String else {
-            print("COULD NOT GET SNAPSHOT OF 1 SKILL ARCANA")
-            return nil
-        }
+        guard let arcanaID = arcanaDict["arcanaID"], let nameKR = arcanaDict["nameKR"], let nameJP = arcanaDict["nameJP"], let rarity = arcanaDict["rarity"], let group = arcanaDict["group"], let weapon = arcanaDict["weapon"], let affiliation = arcanaDict["affiliation"] else { return nil }
         
-        uid = u
-        nameKR = nKR
-        nameJP = nJP
-        
-        if let iconURL = (snapshot.value as? NSDictionary)?["iconURL"] as? String {
-            self.iconURL = iconURL
-        }
-        if let imageURL = (snapshot.value as? NSDictionary)?["imageURL"] as? String {
-            self.imageURL = imageURL
-        }
+        self.arcanaID = arcanaID
+        self.nameKR = nameKR
+        self.nameJP = nameJP
+        self.rarity = rarity
+        self.group = group
+        self.weapon = weapon
+        self.affiliation = affiliation
         
     }
+    
+    func getUID() -> String {
+        return arcanaID
+    }
+    
+}
 
+class Arcana: ArcanaPreview {
     
 }
 

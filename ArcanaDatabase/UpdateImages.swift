@@ -13,8 +13,7 @@ import Firebase
 
 func downloadImages(uid: String, imageURL: String, iconURL: String) {
     
-    
-    let ref = FIREBASE_REF.child("arcana/\(uid)")
+    let ref = ARCANA_REF.child("uid")
 
     var images = [String : String]()
     
@@ -64,25 +63,4 @@ func downloadImages(uid: String, imageURL: String, iconURL: String) {
     
 }
 
-func downloadImages(nameJP: String, imageURL: String, iconURL: String) {
-    
-    let ref = FIREBASE_REF.child("arcana")
-    
-    ref.queryLimited(toLast: 50).observeSingleEvent(of: .value, with: { snapshot in
-        print("Searching for arcana uid...")
-        for i in snapshot.children.reversed() {
-            let arcana = Arcana(snapshot: i as! DataSnapshot)
-            let uid = arcana!.uid
-            if arcana!.nameJP.contains(nameJP) {
-                
-                downloadImages(uid: uid, imageURL: imageURL, iconURL: iconURL)
-                
-            }
-            
-            
-        }
-        
-    })
-    
-}
 
