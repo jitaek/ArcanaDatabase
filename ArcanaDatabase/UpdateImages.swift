@@ -11,7 +11,7 @@ import Firebase
 
 // Update both images given UID. If one of the URLS are empty, don't update that one only.
 
-func downloadImages(uid: String, imageURL: String, iconURL: String) {
+func downloadImages(uid: String, imageURL: String, iconURL: String, completion: @escaping () -> ()) {
     
     let ref = ARCANA_REF.child("uid")
 
@@ -39,6 +39,7 @@ func downloadImages(uid: String, imageURL: String, iconURL: String) {
             let task = URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
                 if error != nil {
                     print("DOWNLOAD \(image) ERROR")
+                    completion()
                 }
                 
                 if let data = data {
@@ -52,7 +53,11 @@ func downloadImages(uid: String, imageURL: String, iconURL: String) {
                             print("UPLOADED \(image) FOR \(uid)")
                             
                         }
+                        completion()
                     })
+                }
+                else {
+                    completion()
                 }
                 
             })

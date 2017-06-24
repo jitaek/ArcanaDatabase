@@ -14,23 +14,13 @@ import Firebase
 import Foundation
 
 
-class ArcanaDatabase: UIViewController, UITextFieldDelegate {
+class ArcanaUploadViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var imageField: UITextField!
     @IBOutlet weak var iconField: UITextField!
-    
-    let baseURL = "https://xn--eckfza0gxcvmna6c.gamerch.com/"
-    let group = DispatchGroup()
-    let loop = DispatchGroup()
-    let download = DispatchGroup()
-    let arcanaURL = "幸運に導く戦士ニンファ"
 
-    var attributeValues = [String]()
-    var urls = [String]()
     var arcanaDict = [String : String]()
-    var arcanaID: Int?
-    var arcanaArray = [Arcana]()
     
     @IBAction func downloadArcana(_ sender: Any) {
         
@@ -42,7 +32,14 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
             // upload images
             
             if let arcanaID = arcana?.getUID() {
-                downloadImages(uid: arcanaID, imageURL: self.imageField.text!, iconURL: self.iconField.text!)
+                downloadImages(uid: arcanaID, imageURL: self.imageField.text!, iconURL: self.iconField.text!, completion: {
+                    
+                    DispatchQueue.main.async {
+                        let reviewVC = ReviewViewController(arcanaID: arcanaID)
+                        self.navigationController?.pushViewController(reviewVC, animated: true)
+                    }
+                    
+                })
             }
                         
         }
@@ -50,7 +47,9 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func updateImages(_ sender: Any) {
-        downloadImages(uid: nameField.text!, imageURL: imageField.text!, iconURL: iconField.text!)
+        downloadImages(uid: nameField.text!, imageURL: imageField.text!, iconURL: iconField.text!, completion: {
+            
+        })
     }
     
     func login() {
