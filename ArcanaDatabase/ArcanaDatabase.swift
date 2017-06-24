@@ -19,16 +19,12 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var imageField: UITextField!
     @IBOutlet weak var iconField: UITextField!
-    // let google = "https://www.google.com/searchbyimage?&image_url="
-    // let imageURL = "https://cdn.img-conv.gamerch.com/img.gamerch.com/xn--eckfza0gxcvmna6c/149117/20141218143001Q53NTilN.jpg"
-    @IBAction func downloadImage(_ sender: Any) {
-    }
+    
     let baseURL = "https://xn--eckfza0gxcvmna6c.gamerch.com/"
     let group = DispatchGroup()
     let loop = DispatchGroup()
     let download = DispatchGroup()
     let arcanaURL = "幸運に導く戦士ニンファ"
-    //let dispatch_group = dispatch_group_create()
 
     var attributeValues = [String]()
     var urls = [String]()
@@ -36,6 +32,21 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
     var arcanaID: Int?
     var arcanaArray = [Arcana]()
     
+    @IBAction func downloadArcana(_ sender: Any) {
+        
+        guard let arcanaURL = URL(string: nameField.text!) else { return }
+        
+        let uploader = ArcanaUploader.uploader
+        uploader.parseArcana(arcanaURL: arcanaURL, mainImage: nil, profileImage: nil) { (error, arcana) in
+            
+            // upload images
+            if let arcanaID = arcana?.getUID() {
+                downloadImages(uid: arcanaID, imageURL: self.imageField.text!, iconURL: self.iconField.text!)
+            }
+                        
+        }
+        
+    }
     
     @IBAction func updateImages(_ sender: Any) {
         downloadImages(uid: nameField.text!, imageURL: imageField.text!, iconURL: iconField.text!)

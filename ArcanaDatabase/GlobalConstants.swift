@@ -13,6 +13,9 @@ import Firebase
 
 let FIREBASE_REF = Database.database().reference()
 let STORAGE_REF = Storage.storage().reference()
+let ARCANA_REF = FIREBASE_REF.child("arcana")
+let ARCANAPREVIEW_REF = FIREBASE_REF.child("arcanaPreview")
+let REVIEW_REF = FIREBASE_REF.child("review")
 
 let SCREENWIDTH = UIScreen.main.bounds.width
 let SCREENHEIGHT = UIScreen.main.bounds.height
@@ -31,9 +34,6 @@ let lightGrayColor = UIColor(red:0.86, green:0.88, blue:0.9, alpha:1.0)
 let greenColor = UIColor(red:0.3, green:0.85, blue:0.39, alpha:1.0)
 let lightGreenColor = UIColor(red:0.41, green:0.64, blue:0.51, alpha:1.0)
 let textGrayColor = UIColor(red:0.53, green:0.53, blue:0.53, alpha:1.0)
-
-let ARCANA_REF = FIREBASE_REF.child("arcana")
-let ARCANAPREVIEW_REF = FIREBASE_REF.child("arcanaPreview")
 
 enum ArcanaAttribute: String {
     

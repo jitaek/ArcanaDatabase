@@ -503,6 +503,10 @@ class ArcanaUploader: NSObject {
         
         let uploadGroup = DispatchGroup()
         let arcanaID = ARCANA_REF.childByAutoId().key
+        // upload to /review for QA
+        let arcanaRef = REVIEW_REF.child(arcanaID)
+//        let arcanaRef = ARCANA_REF.child(arcanaID)
+        
         // translate, put korean in dict values.
         arcanaDict["uid"] = arcanaID
         
@@ -531,17 +535,14 @@ class ArcanaUploader: NSObject {
         
         let arcanaOneSkill = ["uid" : arcanaID, "nameKR" : "\(nKR)", "nameJP" : "\(nJP)", "rarity" : "\(r)", "class" : "\(g)", "tavern" : "\(t)", "affiliation" : "\(a)", "cost" : "\(c)", "weapon" : "\(w)", "kizunaName" : "\(kN)", "kizunaCost" : "\(kC)", "kizunaDesc" : "\(kD)", "skillCount" : "\(sC)", "skillName1" : "\(sN1)", "skillMana1" : "\(sM1)", "skillDesc1" : "\(sD1)", "numberOfViews" : 0] as [String : Any]
         
-        let arcanaRef = [arcanaID : arcanaOneSkill]
-        
         // check for ability types
         findAbilities()
         uploadGroup.enter()
         
-        ARCANA_REF.updateChildValues(arcanaRef, withCompletionBlock: { (error, reference) in
+        arcanaRef.updateChildValues(arcanaOneSkill, withCompletionBlock: { (error, reference) in
             
             //            downloadImages(nameJP: self.nameField.text!, imageURL: self.imageField.text!, iconURL: self.iconField.text!)
             // check for chainStory, chainStone, dateAdded
-            let arcanaRef = ARCANA_REF.child(arcanaID)
             
             uploadGroup.enter()
             arcanaRef.updateChildValues(["numberOfLikes" : 0], withCompletionBlock: { (error, reference) in
