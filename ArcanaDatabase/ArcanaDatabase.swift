@@ -40,6 +40,7 @@ class ArcanaDatabase: UIViewController, UITextFieldDelegate {
         uploader.parseArcana(arcanaURL: arcanaURL, mainImage: nil, profileImage: nil) { (error, arcana) in
             
             // upload images
+            
             if let arcanaID = arcana?.getUID() {
                 downloadImages(uid: arcanaID, imageURL: self.imageField.text!, iconURL: self.iconField.text!)
             }

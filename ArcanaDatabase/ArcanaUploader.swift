@@ -446,8 +446,6 @@ class ArcanaUploader: NSObject {
     
     func uploadImages(arcanaID: String, mainImage: UIImage?, profileImage: UIImage?, completion: @escaping (Error?) -> Void) {
         
-        print("Uploading Images...")
-        
         let imageUploadGroup = DispatchGroup()
         
         imageUploadGroup.enter()
@@ -490,7 +488,6 @@ class ArcanaUploader: NSObject {
         }
         
         imageUploadGroup.notify(queue: DispatchQueue.main, execute: {
-            print("images uploaded")
             completion(nil)
         })
         
@@ -508,7 +505,7 @@ class ArcanaUploader: NSObject {
 //        let arcanaRef = ARCANA_REF.child(arcanaID)
         
         // translate, put korean in dict values.
-        arcanaDict["uid"] = arcanaID
+        arcanaDict["arcanaID"] = arcanaID
         
         // Base Case: only 1 skill, 1 ability. Does not have nickname.
         if arcanaDict[ArcanaAttribute.affiliation.rawValue] == nil {
@@ -659,7 +656,7 @@ class ArcanaUploader: NSObject {
         
         // WAIT FOR ALL UPLOADS
         uploadGroup.notify(queue: DispatchQueue.main, execute: {
-            
+            print("Upload finished.")
             completion(nil)
         })
         
@@ -669,7 +666,7 @@ class ArcanaUploader: NSObject {
         
         let abilityRef = FIREBASE_REF.child("ability")
         
-        if let id = arcanaDict["uid"] {
+        if let id = arcanaDict["arcanaID"] {
             if let sD1 = arcanaDict["skillDesc1"] {
                 if sD1.contains("아군") && sD1.contains("공격력") {
                     let buffRef = abilityRef.child("buff").child(id)
