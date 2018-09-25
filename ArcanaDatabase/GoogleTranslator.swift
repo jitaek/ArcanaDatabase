@@ -40,7 +40,7 @@ class GoogleTranslator: NSObject {
             
             if let data = data {
                 
-                let json = JSON(data: data)
+                let json = try! JSON(data: data)
                 
                 if let translation = json["data"]["translations"][0]["translatedText"].string {
                     

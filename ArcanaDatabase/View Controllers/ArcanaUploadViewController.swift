@@ -49,6 +49,12 @@ class ArcanaUploadViewController: UIViewController, UITextFieldDelegate {
     @IBAction func updateImages(_ sender: Any) {
         downloadImages(uid: nameField.text!, imageURL: imageField.text!, iconURL: iconField.text!, completion: {
             
+            DispatchQueue.main.async {
+                self.nameField.text = nil
+                self.imageField.text = nil
+                self.iconField.text = nil
+            }
+            
         })
     }
     
@@ -71,6 +77,39 @@ class ArcanaUploadViewController: UIViewController, UITextFieldDelegate {
         nameField.delegate = self
         imageField.delegate = self
         iconField.delegate = self
+//        downloadImageURLS()
+//        DataService.shared.findLegends()
+    }
+    
+    
+    
+    func downloadImageURLS() {
+        
+        ARCANA_REF.observe(.childAdded, with: { snapshot in
+            
+            let arcanaID = snapshot.key
+            
+            STORAGE_REF.child("image/arcana").child(arcanaID).child("icon.jpg").downloadURL { (URL, error) -> Void in
+                
+                if error != nil {
+                    
+                }
+                else if let url = URL {
+                    ARCANA_REF.child(arcanaID).child("iconURL").setValue(url.absoluteString)
+                }
+            }
+            
+            STORAGE_REF.child("image/arcana").child(arcanaID).child("main.jpg").downloadURL { (URL, error) -> Void in
+                if error != nil {
+                    
+                }
+                else if let url = URL {
+                    ARCANA_REF.child(arcanaID).child("imageURL").setValue(url.absoluteString)
+                }
+            }
+            
+            
+        })
     }
 
     func moveAbilityRefs() {

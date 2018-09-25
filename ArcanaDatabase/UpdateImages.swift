@@ -13,27 +13,31 @@ import Firebase
 
 func downloadImages(uid: String, imageURL: String, iconURL: String, completion: @escaping () -> ()) {
     
-    let ref = ARCANA_REF.child("uid")
-
+    if imageURL == "" && iconURL == "" {
+        completion()
+        return
+    }
+    
+//    let previewRef = ARCANAPREVIEW_REF.child(uid)
+//    let arcanaRef = ARCANA_REF.child(uid)
+    let arcanaRef = REVIEW_REF.child(uid)
     var images = [String : String]()
+    images.removeAll()
     
     print("Processing input...")
 
     images.updateValue(imageURL, forKey: "main")
-    images.updateValue(iconURL, forKey: "icon")
+    if (iconURL != "") {
+        images.updateValue(iconURL, forKey: "icon")
+
+    }
     
+    let dispatchGroup = DispatchGroup()
     
     for (image, url) in images {
         
+        dispatchGroup.enter()
         if url != "" {
-            
-            if image == "main" {
-                ref.child("imageURL").setValue(url)
-                
-            }
-            else {
-                ref.child("iconURL").setValue(url)
-            }
             
             let url = URL(string: url)
             let task = URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
@@ -41,7 +45,7 @@ func downloadImages(uid: String, imageURL: String, iconURL: String, completion: 
                     print("DOWNLOAD \(image) ERROR")
                     completion()
                 }
-                
+                print("image downloaded.")
                 if let data = data {
                     // upload to firebase storage.
                     
@@ -51,19 +55,27 @@ func downloadImages(uid: String, imageURL: String, iconURL: String, completion: 
                             print("ERROR OCCURED WHILE UPLOADING \(image)")
                         } else {
                             print("UPLOADED \(image) FOR \(uid)")
-                            
+                            if let downloadURL = metadata?.downloadURL()?.absoluteString {
+                                if image == "main" {
+                                    arcanaRef.child("imageURL").setValue(downloadURL)
+                                }
+                                else {
+                                    arcanaRef.child("iconURL").setValue(downloadURL)
+                                }
+                                
+                            }
                         }
-                        completion()
+                        dispatchGroup.leave()
                     })
                 }
-                else {
-                    completion()
-                }
-                
             })
             task.resume()
             
         }
+    }
+    
+    dispatchGroup.notify(queue: .main) {
+        completion()
     }
     
 }

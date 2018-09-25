@@ -34,7 +34,7 @@ class ArcanaUploader: NSObject {
                 self.uploadArcana(completion: { error in
                     
                     if let arcana = Arcana(arcanaDict: self.arcanaDict) {
-                        
+                        	
                         self.uploadImages(arcanaID: arcana.getUID(), mainImage: mainImage, profileImage: profileImage, completion: { error in
                             
                             completion(nil, arcana)
@@ -78,7 +78,7 @@ class ArcanaUploader: NSObject {
             if html.contains("SKILL 2") {
                 oneSkill = false
             }
-            if let doc = Kanna.HTML(html: html, encoding: String.Encoding.utf8) {
+            if let doc = try? Kanna.HTML(html: html, encoding: String.Encoding.utf8) {
                 
                 // Now getting tables.
                 for table in doc.xpath("//table") {
@@ -129,13 +129,13 @@ class ArcanaUploader: NSObject {
             }
             for (key, value) in tables {
                 
-                let parse = Kanna.HTML(html: value, encoding: String.Encoding.utf8)
+                let parse = try! Kanna.HTML(html: value, encoding: String.Encoding.utf8)
                 
                 switch key {
                     
                 case "名　前":
                     
-                    for (index, link) in parse!.xpath("//td").enumerated() {
+                    for (index, link) in parse.xpath("//td").enumerated() {
                         
                         let attribute = link.text!
                         
@@ -144,7 +144,7 @@ class ArcanaUploader: NSObject {
                             arcanaDict.updateValue(attribute, forKey: "nameJP")
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.nameKR.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.nameKR)
                                 }
                             })
                             
@@ -166,22 +166,22 @@ class ArcanaUploader: NSObject {
                     
                 case "絆ステタイプ":
                     
-                    for (index, link) in parse!.xpath("//td").enumerated() {
+                    for (index, link) in parse.xpath("//td").enumerated() {
                         let attribute = link.text!
                         switch index {
                             
                         case 1:
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.kizunaName.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.kizunaName)
                                 }
                             })
                         case 2:
-                            self.arcanaDict.updateValue(attribute, forKey: ArcanaAttribute.kizunaCost.rawValue)
+                            self.arcanaDict.updateValue(attribute, forKey: ArcanaAttribute.kizunaCost)
                         case 3:
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.kizunaDesc.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.kizunaDesc)
                                 }
                             })
                         default:
@@ -192,12 +192,12 @@ class ArcanaUploader: NSObject {
                     }
                     
                 case "武器タイプ":
-                    for (index, link) in parse!.xpath("//td").enumerated() {
+                    for (index, link) in parse.xpath("//td").enumerated() {
                         
                         let attribute = link.text!
                         
                         if index == 0 {
-                            arcanaDict.updateValue(getWeaponJPKR(string: attribute.trimmingCharacters(in: .whitespacesAndNewlines)), forKey: ArcanaAttribute.weapon.rawValue)
+                            arcanaDict.updateValue(getWeaponJPKR(string: attribute.trimmingCharacters(in: .whitespacesAndNewlines)), forKey: ArcanaAttribute.weapon)
                         }
                         else {
                             break
@@ -206,7 +206,7 @@ class ArcanaUploader: NSObject {
                         
                     }
                 case "SKILL", "SKILL 1":
-                    for (index, link) in parse!.xpath("//td").enumerated() {
+                    for (index, link) in parse.xpath("//td").enumerated() {
                         
                         let attribute = link.text!
                         
@@ -214,15 +214,15 @@ class ArcanaUploader: NSObject {
                         case 0:
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillName1.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillName1)
                                 }
                             })
                         case 1:
-                            self.arcanaDict.updateValue(attribute, forKey: ArcanaAttribute.skillMana1.rawValue)
+                            self.arcanaDict.updateValue(attribute, forKey: ArcanaAttribute.skillMana1)
                         case 2:
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillDesc1.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillDesc1)
                                 }
                             })
                         default:
@@ -233,7 +233,7 @@ class ArcanaUploader: NSObject {
                     }
                     
                 case "SKILL 2":
-                    for (index, link) in parse!.xpath("//td").enumerated() {
+                    for (index, link) in parse.xpath("//td").enumerated() {
                         
                         let attribute = link.text!
                         
@@ -241,19 +241,19 @@ class ArcanaUploader: NSObject {
                         case 0:
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillName2.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillName2)
                                 }
                             })
                         case 1:
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillMana2.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillMana2)
                                 }
                             })
                         case 2:
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillDesc2.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillDesc2)
                                 }
                             })
                         default:
@@ -264,7 +264,7 @@ class ArcanaUploader: NSObject {
                     }
                     
                 case "SKILL 3":
-                    for (index, link) in parse!.xpath("//td").enumerated() {
+                    for (index, link) in parse.xpath("//td").enumerated() {
                         
                         let attribute = link.text!
                         
@@ -272,19 +272,19 @@ class ArcanaUploader: NSObject {
                         case 0:
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillName3.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillName3)
                                 }
                             })
                         case 1:
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillMana3.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillMana3)
                                 }
                             })
                         case 2:
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillDesc3.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.skillDesc3)
                                 }
                             })
                         default:
@@ -296,20 +296,20 @@ class ArcanaUploader: NSObject {
                     
                 case "ABILITY":
                     
-                    for (index, link) in parse!.xpath("//td").enumerated() {
+                    for (index, link) in parse.xpath("//td").enumerated() {
                         
                         let attribute = link.text!
                         switch index {
                         case 0:
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.abilityName1.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.abilityName1)
                                 }
                             })
                         case 1:
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.abilityDesc1.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.abilityDesc1)
                                 }
                             })
                         default:
@@ -321,7 +321,7 @@ class ArcanaUploader: NSObject {
                     
                 case "ABILITY2":
                     
-                    for (index, link) in parse!.xpath("//td").enumerated() {
+                    for (index, link) in parse.xpath("//td").enumerated() {
                         
                         let attribute = link.text!
                         
@@ -329,13 +329,13 @@ class ArcanaUploader: NSObject {
                         case 0:
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.abilityName2.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.abilityName2)
                                 }
                             })
                         case 1:
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.abilityDesc2.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.abilityDesc2)
                                 }
                             })
                         default:
@@ -347,14 +347,14 @@ class ArcanaUploader: NSObject {
                     
                 case "PARTYABILITY":
                     
-                    for (index, link) in parse!.xpath("//td").enumerated() {
+                    for (index, link) in parse.xpath("//td").enumerated() {
                         
                         if index == 1 {
                             let attribute = link.text!
                             if attribute != "" {
                                 translator.translate(attribute, group: group, completion: { translation in
                                     if let text = translation {
-                                        self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.partyAbility.rawValue)
+                                        self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.partyAbility)
                                     }
                                 })
                             }
@@ -366,7 +366,7 @@ class ArcanaUploader: NSObject {
                     }
                     
                 case "入手方法":
-                    for (index, link) in parse!.xpath("//td").enumerated() {
+                    for (index, link) in parse.xpath("//td").enumerated() {
                         
                         let attribute = link.text!
                         switch index {
@@ -387,14 +387,18 @@ class ArcanaUploader: NSObject {
                     if foundChainStone == true {
                         break
                     }
-                    for link in parse!.xpath("//td") {
+                    for link in parse.xpath("//td") {
                         
                         let attribute = link.text!
                         if attribute.contains("精霊石") {
                             foundChainStone = true
                             let trailingString = attribute.substring(from: attribute.indexOf("Lv:")!)
                             // possibly more than one chainStone quest
-                            let chainStoneLevel = String(NSString(string: trailingString.substring(with: Range<String.Index>(trailingString.index(trailingString.indexOf("Lv:")!, offsetBy: 3)..<trailingString.index(trailingString.indexOf("/")!, offsetBy: 0)))))
+                            let slashIndex = trailingString.indexOf("/")
+                            let levelIndex = trailingString.indexOf("Lv:")
+                            let range = slashIndex..<levelIndex
+                            let chainStoneLevel = trailingString.substring(with: range)
+
                             if let cS = arcanaDict["chainStone"] {
                                 if chainStoneLevel == "?" {
                                     arcanaDict.updateValue("\(cS), 레벨 1", forKey: "chainStone")
@@ -411,12 +415,12 @@ class ArcanaUploader: NSObject {
                     }
                     
                 case "CHAIN STORY":
-                    for link in parse!.xpath("//td") {
+                    for link in parse.xpath("//td") {
                         let attribute = link.text!
                         if attribute.contains("章") && attribute.contains("】") {
                             translator.translate(attribute, group: group, completion: { translation in
                                 if let text = translation {
-                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.chainStory.rawValue)
+                                    self.arcanaDict.updateValue(text, forKey: ArcanaAttribute.chainStory)
                                 }
                             })
                             break
@@ -508,17 +512,73 @@ class ArcanaUploader: NSObject {
         arcanaDict["arcanaID"] = arcanaID
         
         // Base Case: only 1 skill, 1 ability. Does not have nickname.
-        if arcanaDict[ArcanaAttribute.affiliation.rawValue] == nil {
-            arcanaDict[ArcanaAttribute.affiliation.rawValue] = ""
+        if arcanaDict[ArcanaAttribute.affiliation] == nil {
+            arcanaDict[ArcanaAttribute.affiliation] = ""
         }
         
         // TODO: Change base case to 1 skill 0 ability...
-        guard let nKR = arcanaDict["nameKR"], let nJP = arcanaDict["nameJP"], let r = arcanaDict["rarity"], let g = arcanaDict["group"], let t = arcanaDict["tavern"], let a = arcanaDict["affiliation"], let c = arcanaDict["cost"], let w = arcanaDict["weapon"], let kN = arcanaDict["kizunaName"], var kC = arcanaDict["kizunaCost"], let kD = arcanaDict["kizunaDesc"], let sC = arcanaDict["skillCount"], let sN1 = arcanaDict["skillName1"], let sM1 = arcanaDict["skillMana1"], let sD1 = arcanaDict["skillDesc1"] else {
-            
-            print("ARCANA DICIONARY VALUE IS NIL")
+        guard let nKR = arcanaDict["nameKR"] else {
+            print("nameKR is nil")
             return
         }
-        
+        guard let nJP = arcanaDict["nameJP"] else {
+            print("nameJP is nil")
+            return
+        }
+        guard let r = arcanaDict["rarity"] else {
+            print("rarity is nil")
+            return
+        }
+        guard let g = arcanaDict["group"] else {
+            print("group is nil")
+            return
+        }
+        guard let t = arcanaDict["tavern"] else {
+            print("tavern is nil")
+            return
+        }
+        guard let a = arcanaDict["affiliation"] else {
+            print("affiliation is nil")
+            return
+        }
+        guard let c = arcanaDict["cost"] else {
+            print("cost is nil")
+            return
+        }
+        guard let w = arcanaDict["weapon"] else {
+            print("weapon is nil")
+            return
+        }
+        guard let kN = arcanaDict["kizunaName"] else {
+            print("kizunaName is nil")
+            return
+        }
+        guard var kC = arcanaDict["kizunaCost"] else {
+            print("kizunaCost is nil")
+            return
+        }
+        guard let kD = arcanaDict["kizunaDesc"] else {
+            print("kizunaDesc is nil")
+            return
+        }
+        guard let sC = arcanaDict["skillCount"] else {
+            print("skillCount is nil")
+            return
+        }
+        guard let sN1 = arcanaDict["skillName1"] else {
+            print("skillName1 is nil")
+            return
+        }
+        guard let sM1 = arcanaDict["skillMana1"] else {
+            print("skillMana1")
+            return
+        }
+        guard let sD1 = arcanaDict["skillDesc1"] else {
+            print("skillDesc1")
+            return
+        }
+            
+
         if kC == "" {
             kC = kC.fixEmptyString(rarity: r)
         }
