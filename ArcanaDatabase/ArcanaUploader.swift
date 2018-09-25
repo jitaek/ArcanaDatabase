@@ -396,7 +396,7 @@ class ArcanaUploader: NSObject {
                             // possibly more than one chainStone quest
                             let slashIndex = trailingString.indexOf("/")
                             let levelIndex = trailingString.indexOf("Lv:")
-                            let range = slashIndex..<levelIndex
+                            let range = levelIndex..<slashIndex
                             let chainStoneLevel = trailingString.substring(with: range)
 
                             if let cS = arcanaDict["chainStone"] {
