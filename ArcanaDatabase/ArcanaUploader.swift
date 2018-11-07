@@ -503,7 +503,7 @@ class ArcanaUploader: NSObject {
         print("STARTING UPLOAD PROCESS")
         
         let uploadGroup = DispatchGroup()
-        let arcanaID = ARCANA_REF.childByAutoId().key
+        guard let arcanaID = ARCANA_REF.childByAutoId().key else { return }
         // upload to /review for QA
         let arcanaRef = REVIEW_REF.child(arcanaID)
 //        let arcanaRef = ARCANA_REF.child(arcanaID)

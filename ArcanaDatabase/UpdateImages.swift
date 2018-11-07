@@ -55,7 +55,7 @@ func downloadImages(uid: String, imageURL: String, iconURL: String, completion: 
                             print("ERROR OCCURED WHILE UPLOADING \(image)")
                         } else {
                             print("UPLOADED \(image) FOR \(uid)")
-                            if let downloadURL = metadata?.downloadURL()?.absoluteString {
+                            if let downloadURL = metadata?.path {
                                 if image == "main" {
                                     arcanaRef.child("imageURL").setValue(downloadURL)
                                 }
